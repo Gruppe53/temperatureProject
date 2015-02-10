@@ -2,17 +2,18 @@ package client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Timer;
-
-// import org.apache.commons.cli.*;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class TemperatureClient {
 	private TemperatureSensor sensor;
-	private Timer timer;
 	private Socket client;
 	private DataInputStream input;
 	private DataOutputStream output;
+	private ScheduledExecutorService schedule;
 	
 	// Default values
 	private final String SERVER_HOST = "localhost";
@@ -41,11 +42,16 @@ public class TemperatureClient {
 		 * Try to create a GUI 
 		 */
 		
+		// Create sensor
 		sensor = new TemperatureSensor();
 		
-		timer = new Timer();
-		
-		timer.scheduleAtFixedRate(sensor, 0, UPDATE_INTERVAL);
+		try {
+			client = new Socket(SERVER_HOST, SERVER_PORT);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void main(String[] args) {

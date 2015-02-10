@@ -1,9 +1,8 @@
 package client;
 
 import java.util.Random;
-import java.util.TimerTask;
 
-public class TemperatureSensor extends TimerTask {
+public class TemperatureSensor {
 	RNGData d;
 	
 	// Default values
@@ -14,49 +13,29 @@ public class TemperatureSensor extends TimerTask {
 	private final double MIN_FAC	=  0.01; // Minimum init factor
 	private final double INIT_FAC	=  0.05; // Default init factor
 
-	@Override
-	public void run() {
-		// TODO sensor.run
-		/*
-		 * 1.	Ask "d" for initial temperature
-		 * 2.	Ask "d" for factor
-		 * 3a.	Multiply initial temperature with a random number between 0.00 and "d.getFactor"
-		 * 		- 0.00 because the temperature might not have changed at all.
-		 * 3b.	Choose whether to decrease (subtraction operand) or increase (addition operand)
-		 * 		- This should be random as well
-		 * 4.	Set new temperature in "d"
-		 * 
-		 * TODO sensor.run: How do we now return this new value to TemperatureClient? Hmmm...
-		 */
-		
+	public void newTemperature() {
 		double newTemp;
 		
-		// Create new temperature
 		Random r = new Random();
 		
-		newTemp = d.getFactor() * r.nextDouble(); // Between 0-0.05
+		// How many percent should we increase/decrease with?
+		newTemp = d.getFactor() * r.nextDouble();
 		
-		if(r.nextBoolean()) {
-			System.out.print("Temperature increase with " + (newTemp) + "%, new temperature: ");
+		if(r.nextBoolean())
+			// Increase
 			d.setTemperature(d.getTemperature() *  (1 + newTemp));
-			System.out.print(d.getTemperature() + "\n");
-		}
-		else {
-			System.out.print("Temperature decrease with " + (newTemp) + "%, new temperature: ");
+		else
+			// Decrease
 			d.setTemperature(d.getTemperature() * (1 - newTemp));
-			System.out.print(d.getTemperature() + "\n");
-		}
 	}
 	
-	public byte getTemperatureAsByte() {
-		byte b = 0; // b = 0xa
-
-		// TODO sensor.getTemperature
-		/*
-		 * 1. Ask "d" for temperature
-		 * 2. Convert returned double value to byte
-		 * 3. Return new byte to calling object
-		 */
+	public byte[] getTemperatureAsByte() {
+		byte[] b = new byte[8];
+		
+		long l = Double.doubleToLongBits(d.getTemperature());
+		
+		for(int i = 0; i < 8; i++)
+			b[i] = (byte) ((l >> ((7 - i) * 8)) & 0xff);
 		
 		return b;
 	}
