@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -62,7 +63,7 @@ public class TemperatureClient {
 						try {
 							output.write(sensor.getTemperatureAsByte());
 						} catch (IOException e) {
-							System.out.println(e.getMessage());
+							System.out.println(e.getStackTrace());
 						}
 					}
 				}, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS);

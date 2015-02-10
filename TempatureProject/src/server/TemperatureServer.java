@@ -53,15 +53,18 @@ public class TemperatureServer {
 			printer = new PrintStream(client.getOutputStream());
 			
 			while(true) {
-				int nRead;
+				int n;
+				buffer = new ByteArrayOutputStream();
 				
-				while((nRead = input.read(line, 0, line.length)) != -1) {
-					buffer.write(line, 0, nRead);
+				while((n = input.read(line, 0, line.length)) != -1) {
+					buffer.write(line, 0, n);
 				}
 				
 				line = buffer.toByteArray();
 				
 				System.out.println(ByteBuffer.wrap(line));
+				
+				System.out.println(input.readUTF());
 				
 				printer.println(line);
 			}

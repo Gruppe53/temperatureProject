@@ -42,7 +42,6 @@ public class TemperatureSensor {
 	
 	// Use default data values
 	public TemperatureSensor() {
-		System.out.println("Sensor init...");
 		d = new RNGData(INIT_TEMP, INIT_FAC);
 	}
 	
