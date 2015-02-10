@@ -46,12 +46,13 @@ public class TemperatureServer {
 		}
 		
 		try {
+			System.out.println("Waiting for client...");
 			client = server.accept();
+			System.out.println("Client connected...");
 			input = new DataInputStream(client.getInputStream());
 			printer = new PrintStream(client.getOutputStream());
 			
 			while(true) {
-				
 				int nRead;
 				
 				while((nRead = input.read(line, 0, line.length)) != -1) {
