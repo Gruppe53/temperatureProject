@@ -1,21 +1,25 @@
 package server;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class TemperatureServer {
 	private ServerSocket server;
 	private Socket client;
 	private PrintStream printer;
 	private DataInputStream input;
-	private static byte[] line = new byte[4];
+	private ByteArrayOutputStream buffer;
+	private byte[] line = new byte[8];
 	
 	// Default values
 	private final int SERVER_PORT = 15051;
 	
-	public static void main(String[] args) {
+	public TemperatureServer() {
 		// TODO TemperatureServer.main
 		/*
 		 * 1. Create server with specified port
@@ -35,5 +39,37 @@ public class TemperatureServer {
 		 * Extra:
 		 * Try to create a GUI
 		 */
+		try {
+			server = new ServerSocket(SERVER_PORT);
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		try {
+			client = server.accept();
+			input = new DataInputStream(client.getInputStream());
+			printer = new PrintStream(client.getOutputStream());
+			
+			while(true) {
+				
+				int nRead;
+				
+				while((nRead = input.read(line, 0, line.length)) != -1) {
+					buffer.write(line, 0, nRead);
+				}
+				
+				line = buffer.toByteArray();
+				
+				System.out.println(ByteBuffer.wrap(line));
+				
+				printer.println(line);
+			}
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public static void main(String[] args) {
+		new TemperatureServer();
 	}
 }
