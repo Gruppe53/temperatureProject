@@ -39,32 +39,42 @@ public class TemperatureServer {
 		 * Extra:
 		 * Try to create a GUI
 		 */
+		
 		try {
+			// Create server
 			server = new ServerSocket(SERVER_PORT);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
 		
 		try {
+			// Wait for client to connect
 			System.out.println("Waiting for client...");
 			client = server.accept();
+			
+			// Create I/O objects when client has connected
 			System.out.println("Client connected...");
-			input = new DataInputStream(client.getInputStream());
-			printer = new PrintStream(client.getOutputStream());
+			input = new DataInputStream(client.getInputStream()); // Input FROM client
+			printer = new PrintStream(client.getOutputStream()); // Output TO client
 			
 			while(true) {
-				System.out.println("cockbag");
-				int n;
+				// Read input from client
 				buffer = new ByteArrayOutputStream();
 				
-				while((n = input.read(line, 0, line.length)) != -1) {
-					buffer.write(line, 0, n);
-				}
+				// Wrap bytes
+				for(int i; (i = input.read(line)) != -1;)
+					buffer.write(line, 0, i);
 				
+				// Flush buffer
+				buffer.flush();
+				
+				// Write bytes to byte array
 				line = buffer.toByteArray();
 				
+				// Print input from client to screen
 				System.out.println(ByteBuffer.wrap(line).getDouble());
 				
+				// Return received byte array to client
 				printer.println(line);
 			}
 		} catch (IOException e) {
