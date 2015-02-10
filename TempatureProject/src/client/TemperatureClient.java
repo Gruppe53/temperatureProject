@@ -6,14 +6,15 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Timer;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class TemperatureClient {
 	private TemperatureSensor sensor;
 	private Socket client;
 	private DataInputStream input;
 	private DataOutputStream output;
-	private ScheduledExecutorService schedule;
 	
 	// Default values
 	private final String SERVER_HOST = "localhost";
@@ -47,6 +48,25 @@ public class TemperatureClient {
 		
 		try {
 			client = new Socket(SERVER_HOST, SERVER_PORT);
+			output = new DataOutputStream(client.getOutputStream());
+			input = new DataInputStream(client.getInputStream());
+			
+			if(client != null && output != null && input != null) {
+				ScheduledExecutorService exe = Executors.newSingleThreadScheduledExecutor();
+				
+				exe.scheduleAtFixedRate(new Runnable() {
+					@Override
+					public void run() {
+						sensor.newTemperature();
+						
+						try {
+							output.write(sensor.getTemperatureAsByte());
+						} catch (IOException e) {
+							System.out.println(e.getMessage());
+						}
+					}
+				}, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
+			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
