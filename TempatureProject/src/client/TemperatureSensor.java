@@ -30,23 +30,26 @@ public class TemperatureSensor {
 	}
 	
 	public byte[] getTemperatureAsByte() {
+		// Create new byte array
 		byte[] b = new byte[8];
 		
+		// Convert double to bits
 		long l = Double.doubleToLongBits(d.getTemperature());
 		
+		// Convert bits to bytes and insert into byte array
 		for(int i = 0; i < 8; i++)
 			b[i] = (byte) ((l >> ((7 - i) * 8)) & 0xff);
 		
 		return b;
 	}
 	
-	// Use default data values
 	public TemperatureSensor() {
+		// Use default data values
 		d = new RNGData(INIT_TEMP, INIT_FAC);
 	}
 	
-	// Specify initial data values
 	public TemperatureSensor(int temperature, double factor) throws IllegalArgumentException {
+		// Specify initial data values
 		if(temperature >= MIN_TEMP && temperature <= MAX_TEMP) // Check that temperature is within acceptable range
 			if(factor >= MIN_FAC && factor <= MAX_FAC) // Check that factor is within acceptable range
 				d = new RNGData(temperature, factor); // Create RNGData with parameter values

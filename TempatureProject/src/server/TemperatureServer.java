@@ -53,6 +53,7 @@ public class TemperatureServer {
 			printer = new PrintStream(client.getOutputStream());
 			
 			while(true) {
+				System.out.println("cockbag");
 				int n;
 				buffer = new ByteArrayOutputStream();
 				
@@ -62,9 +63,7 @@ public class TemperatureServer {
 				
 				line = buffer.toByteArray();
 				
-				System.out.println(ByteBuffer.wrap(line));
-				
-				System.out.println(input.readUTF());
+				System.out.println(ByteBuffer.wrap(line).getDouble());
 				
 				printer.println(line);
 			}

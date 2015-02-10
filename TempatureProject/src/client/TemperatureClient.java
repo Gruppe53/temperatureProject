@@ -44,29 +44,37 @@ public class TemperatureClient {
 		 * Try to create a GUI 
 		 */
 		
+		System.out.println("----------------------------Temperature client----------------------------");
+		
 		// Create sensor
 		sensor = new TemperatureSensor();
 		
 		try {
+			// Create client and I/O objects
 			client = new Socket(SERVER_HOST, SERVER_PORT);
 			output = new DataOutputStream(client.getOutputStream());
 			input = new DataInputStream(client.getInputStream());
 			
+			// If client and I/O objects are created...
 			if(client != null && output != null && input != null) {
+				// Create a scheduled executor service so we can keep sending new data to server
 				ScheduledExecutorService exe = Executors.newSingleThreadScheduledExecutor();
 				
+				// Define executor service
 				exe.scheduleAtFixedRate(new Runnable() {
 					@Override
 					public void run() {
+						// Set new temperature
 						sensor.newTemperature();
 						
 						try {
-							output.write(sensor.getTemperatureAsByte());
+							// Output new temperature to server
+							output.write(sensor.getTemperatureAsByte());;
 						} catch (IOException e) {
 							System.out.println(e.getStackTrace());
 						}
 					}
-				}, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
+				}, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS); // 0 = start immediately, UPDATE_INTERVAL = 5000, TimeUnit.MILISECONDS specifies the given UPDATE_INTERVAL unit
 			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
