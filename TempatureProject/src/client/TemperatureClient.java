@@ -19,7 +19,7 @@ public class TemperatureClient {
 	private final int SERVER_PORT = 15051;
 	private final int UPDATE_INTERVAL = 5000; // Given in miliseconds (1 second = 1.000 miliseconds)
 	
-	public void main(String[] args) {
+	public TemperatureClient() {
 		// TODO TemperatureClient.main
 		/**
 		 * 1. Create CLI-object (Apache Commons CLI, JAR already included in project)
@@ -40,5 +40,15 @@ public class TemperatureClient {
 		 * Extra:
 		 * Try to create a GUI 
 		 */
+		
+		sensor = new TemperatureSensor();
+		
+		timer = new Timer();
+		
+		timer.scheduleAtFixedRate(sensor, 0, UPDATE_INTERVAL);
+	}
+	
+	public static void main(String[] args) {
+		new TemperatureClient();
 	}
 }

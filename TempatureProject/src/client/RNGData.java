@@ -6,6 +6,7 @@ public class RNGData {
 	
 	// Specify start temperature and factor
 	public RNGData(double temperature, double factor) {
+		System.out.println("RNG init...");
 		this.temperature = temperature;
 		this.factor = factor;
 	}

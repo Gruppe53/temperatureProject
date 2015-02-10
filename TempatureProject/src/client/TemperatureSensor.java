@@ -1,5 +1,6 @@
 package client;
 
+import java.util.Random;
 import java.util.TimerTask;
 
 public class TemperatureSensor extends TimerTask {
@@ -27,6 +28,24 @@ public class TemperatureSensor extends TimerTask {
 		 * 
 		 * TODO sensor.run: How do we now return this new value to TemperatureClient? Hmmm...
 		 */
+		
+		double newTemp;
+		
+		// Create new temperature
+		Random r = new Random();
+		
+		newTemp = d.getFactor() * r.nextDouble(); // Between 0-0.05
+		
+		if(r.nextBoolean()) {
+			System.out.print("Temperature increase with " + (newTemp) + "%, new temperature: ");
+			d.setTemperature(d.getTemperature() *  (1 + newTemp));
+			System.out.print(d.getTemperature() + "\n");
+		}
+		else {
+			System.out.print("Temperature decrease with " + (newTemp) + "%, new temperature: ");
+			d.setTemperature(d.getTemperature() * (1 - newTemp));
+			System.out.print(d.getTemperature() + "\n");
+		}
 	}
 	
 	public byte getTemperatureAsByte() {
@@ -44,6 +63,7 @@ public class TemperatureSensor extends TimerTask {
 	
 	// Use default data values
 	public TemperatureSensor() {
+		System.out.println("Sensor init...");
 		d = new RNGData(INIT_TEMP, INIT_FAC);
 	}
 	
