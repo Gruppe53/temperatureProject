@@ -15,10 +15,8 @@ public class TemperatureClient {
 	private DataOutputStream output;
 	
 	// Default values
-	private final int SERVER_PORT = 15051;
 	private final String SERVER_HOST = "localhost";
-	
-	// Default values
+	private final int SERVER_PORT = 15051;
 	private final int UPDATE_INTERVAL = 5000; // Given in miliseconds (1 second = 1.000 miliseconds)
 	
 	public void main(String[] args) {
