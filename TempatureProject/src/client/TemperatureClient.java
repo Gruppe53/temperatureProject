@@ -11,11 +11,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import client.GUI.ClientGUI;
+
 public class TemperatureClient {
 	private TemperatureSensor sensor;
 	private Socket client;
 	private DataInputStream input;
 	private DataOutputStream output;
+	private ClientGUI gui;
 	
 	// Default values
 	private final String SERVER_HOST = "localhost";
@@ -44,7 +47,12 @@ public class TemperatureClient {
 		 * Try to create a GUI 
 		 */
 		
-		System.out.println("----------------------------Temperature client----------------------------");
+		// Start GUI
+		gui = new ClientGUI();
+		
+		gui.createAndShowGUI("Temperature Client");
+		
+		gui.updateTemp("5");
 		
 		// Create sensor
 		sensor = new TemperatureSensor();
@@ -71,15 +79,15 @@ public class TemperatureClient {
 							// Output new temperature to server
 							output.write(sensor.getTemperatureAsByte());;
 						} catch (IOException e) {
-							System.out.println(e.getStackTrace());
+							System.out.println(e.getMessage());
 						}
 					}
-				}, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS); // 0 = start immediately, UPDATE_INTERVAL = 5000, TimeUnit.MILISECONDS specifies the given UPDATE_INTERVAL unit
+				}, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS); // 0 = start immediately (no delay), UPDATE_INTERVAL = 5000 update every 5000 miliseconds (5 seconds)
 			}
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 	
