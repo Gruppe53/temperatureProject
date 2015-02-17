@@ -36,16 +36,19 @@ public class TemperatureStorage {
 		 * 2. If not given as bytes, convert back to bytes
 		 * 3. Return bytes read from disk
 		 */
+		FileInputStream saveFile;
+		ObjectInputStream restore;
+		
 		try {
-			FileInputStream saveFile = new FileInputStream("saveFile.sav");
-			ObjectInputStream restore = new ObjectInputStream(saveFile);
+			saveFile = new FileInputStream("saveFile.sav");
+			restore = new ObjectInputStream(saveFile);
+			
 			b = (byte[]) restore.readObject();
+			
 			restore.close();
-			
-			return b;
-			
-			
 		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} catch (ClassNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
 		return b;

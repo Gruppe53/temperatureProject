@@ -1,6 +1,7 @@
 package client.GUI;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.*;
@@ -12,24 +13,15 @@ public class ClientGUI extends JPanel {
 	private static JFrame f;
 	private static JComponent c;
 	
-	private static ClientGUI instance = null;
+	private ClientConsole console = new ClientConsole();
+	private ClientButtons buttons = new ClientButtons();
 	
-	public static ClientGUI getInstance() {
-		if(instance == null)
-			instance = new ClientGUI();
-		
-		return instance;
-	}
-	
-	private ClientGUI() {
+	public ClientGUI() {
 		// Set layout manager
 		setLayout(new MigLayout());
-		setPreferredSize(new Dimension(640,524));
+		setPreferredSize(new Dimension(540,68));
 		
-		// Add components
-		// Exmaple:
-		// TestObject test = new TestObject();
-		// add(test);
+		add(console);
 	}
 	
 	public void createAndShowGUI(String name) {
@@ -50,4 +42,10 @@ public class ClientGUI extends JPanel {
         f.pack();
         f.setVisible(true);
     }
+
+	public void updateTemp(String temp) {
+		remove(console);
+		validate();
+		repaint();
+	}
 }
