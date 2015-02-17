@@ -8,13 +8,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
-public class TemperatureServer {
-	private ServerSocket server;
-	private Socket client;
-	private PrintStream printer;
-	private DataInputStream input;
-	private ByteArrayOutputStream buffer;
-	private byte[] line = new byte[8];
+public class TemperatureServer implements Runnable {
+	protected Thread thread = null;
+	protected ServerSocket server;
 	
 	// Default values
 	private final int SERVER_PORT = 15051;
@@ -39,54 +35,45 @@ public class TemperatureServer {
 		 * Extra:
 		 * Try to create a GUI
 		 */
+	}
+
+	@Override
+	public void run() {
+		// Sync thread
+		synchronized(this) {
+			this.thread = Thread.currentThread();
+		}
 		
+		// Start server
+		startServer();
+		
+		// Wait for client to connect
+		Socket client = null;
 		try {
-			// Create server
-			server = new ServerSocket(SERVER_PORT);
+			System.out.println("Waiting for client...");
+			
+			client = server.accept();
+			
+			System.out.println("Client from " + client.getLocalAddress() + " connected");
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
 		
+		// When connected add as new thread
+		new Thread(
+			new RunningClient(client, "Client")
+		).start();
+	}
+	
+	private void startServer() {
 		try {
-			// Wait for client to connect
-			System.out.println("Waiting for client...");
-			client = server.accept();
-			
-			// Create I/O objects when client has connected
-			System.out.println("Client connected...");
-			input = new DataInputStream(client.getInputStream()); // Input FROM client
-			printer = new PrintStream(client.getOutputStream()); // Output TO client
-			
-			while(true) {
-				// Read input from client
-				buffer = new ByteArrayOutputStream();
-				
-				// Wrap bytes
-				for(int i; (i = input.read(line)) != -1;)
-					buffer.write(line, 0, i);
-				
-				// Flush buffer
-				buffer.flush();
-				
-				// Write bytes to byte array
-				line = buffer.toByteArray();
-				
-				// Print input from client to screen
-				System.out.println(ByteBuffer.wrap(line).getDouble());
-				
-				// Return received byte array to client
-				printer.println(line);
-			}
-		} catch (IOException e) {
+			this.server = new ServerSocket(this.SERVER_PORT);
+		} catch(IOException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 	
 	public static void main(String[] args) {
-		new Runnable() {
-			public void run() {
-				new TemperatureServer();
-			}
-		};
+		new TemperatureServer();
 	}
 }
