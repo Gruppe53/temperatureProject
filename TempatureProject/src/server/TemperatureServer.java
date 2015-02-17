@@ -83,6 +83,10 @@ public class TemperatureServer {
 	}
 	
 	public static void main(String[] args) {
-		new TemperatureServer();
+		new Runnable() {
+			public void run() {
+				new TemperatureServer();
+			}
+		};
 	}
 }

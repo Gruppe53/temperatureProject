@@ -92,6 +92,10 @@ public class TemperatureClient {
 	}
 	
 	public static void main(String[] args) {
-		new TemperatureClient();
+		new Runnable() {
+			public void run() {
+				new TemperatureClient();
+			}
+		};
 	}
 }
