@@ -16,41 +16,64 @@ public class TemperatureStorage {
 		 * 1. Maybe convert bytes? 2. Save data to file. 3. Return true if
 		 * successful, false otherwise
 		 */
-		TemperatureConverter.temperatureToChar(b);
 		try {
-			File file = new File("Temperature.txt");
-			file.createNewFile();
-			FileWriter writer = new FileWriter(file);
-			writer.write(b + ",");
-			writer.flush();
-			writer.close();
-			return true;
+			File f = new File("materials/temperature");
+			
+			if (f.exists() && !f.isDirectory()) {
+				writeToFile(f, TemperatureConverter.temperatureToChar(b));
+				return true;
+			} 
+			else {
+				f.createNewFile();
+				writeToFile(f, TemperatureConverter.temperatureToChar(b));
+				return true;
+			}
+			
+			
 		} catch (IOException e) {
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
 
 		return false;
 	}
+	
+	private static void writeToFile(File f, char b) {
+		FileWriter writer;
+		try {
+			writer = new FileWriter(f);
+			writer.write(b + ",");
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 
-	public static List<Character> readTemperature() {
+	}
+
+	public static String readTemperature() {
 		// TODO
 		/*
 		 * 1. Read file from disk 2. If not given as bytes, convert back to
 		 * bytes 3. Return bytes read from disk
 		 */
+		String str = null;
+		
 		try {
-			FileReader fr = new FileReader("Temperature.txt");
+			FileReader fr = new FileReader("temperature.txt");
 			List<Character> a = new ArrayList<Character>();
 
 			fr.read((CharBuffer) a);
 			for (char c : a) {
 				System.out.println(c);
+				str += c;
 			}
 			fr.close();
-			return a;
+
+			return str;
 		} catch (IOException e) {
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
+		
 		return null;
 	}
 
