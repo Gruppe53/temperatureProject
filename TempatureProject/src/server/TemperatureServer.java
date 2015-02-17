@@ -1,12 +1,8 @@
 package server;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
 public class TemperatureServer implements Runnable {
 	protected Thread thread = null;
