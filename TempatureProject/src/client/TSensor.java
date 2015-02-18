@@ -41,11 +41,16 @@ public class TSensor {
 	
 	/**
 	 * Increases or decreases the current temperature within the given factor (default 0.05).
-	 * When called the method will first determine with how much it will 
+	 * <p>
+	 * When called, the method will first determine with how much it will 
 	 * increase or decrease with (0.00 to 0.05 as default), this is called newTemp.
 	 * Next it will decide whether to increase or decrease.
+	 * <p>
 	 * The formula:
 	 * Current temperature * (1 (+ OR -) newTemp).
+	 * <p>
+	 * If the new temperature is above or below the acceptable range (14-24)
+	 * it will either set the temperature to 24 or 14, respectively
 	 */
 	public void newTemperature() {
 		double newTemp;
