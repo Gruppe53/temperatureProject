@@ -45,6 +45,7 @@ public class TServer implements Runnable {
 		
 		// Wait for client to connect
 		Socket client = null;
+		
 		try {
 			System.out.println("Waiting for client...");
 			
