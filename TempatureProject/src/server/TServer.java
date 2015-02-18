@@ -43,23 +43,25 @@ public class TServer implements Runnable {
 		// Start server
 		startServer();
 		
-		// Wait for client to connect
-		Socket client = null;
-		
-		try {
-			System.out.println("Waiting for client...");
+		while(true) {
+			// Wait for client to connect
+			Socket client = null;
 			
-			client = server.accept();
+			try {
+				System.out.println("Waiting for client...");
+				
+				client = server.accept();
+				
+				System.out.println("Client from " + client.getLocalAddress() + " connected");
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
 			
-			System.out.println("Client from " + client.getLocalAddress() + " connected");
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
+			// When client is connected add as new thread
+			new Thread(
+				new RTClient(client)
+			).start();
 		}
-		
-		// When client is connected add as new thread
-		new Thread(
-			new RTClient(client)
-		).start();
 	}
 	
 	private void startServer() {

@@ -56,11 +56,14 @@ public class TClient {
 			
 			// If client and I/O objects are created...
 			if(client != null && output != null && input != null) {
+				System.out.println("meh");
 				try {
-					output.write(sensor.getTemperatureAsByte());
+					output.writeDouble(sensor.getTemperatureAsDouble());
 				} catch(IOException e) {
 					System.out.println(e.getMessage());
 				}
+				
+				System.out.println("meh2");
 				
 				// Create a scheduled executor service so we can keep sending new data to the server with a specific interval
 				ScheduledExecutorService exe = Executors.newSingleThreadScheduledExecutor();
