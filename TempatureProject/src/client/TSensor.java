@@ -13,6 +13,7 @@ public class TSensor {
 	private final double MAX_FAC	=  0.10; // Maximum init factor
 	private final double MIN_FAC	=  0.01; // Minimum init factor
 	private final double INIT_FAC	=  0.05; // Default init factor
+	private final int DEF_DECIMALS	= 2;	 // Default number of decimals
 	
 	// Class constructor with default data values
 	public TSensor() {
@@ -82,10 +83,10 @@ public class TSensor {
 	 */
 	public byte[] getTemperatureAsByte() {
 		// Convert double to bits
-		long l = Double.doubleToLongBits(getTemperatureAsDouble(2));
+		long l = Double.doubleToLongBits(getTemperatureAsDouble(DEF_DECIMALS));
 		
 		// Create new byte array
-		byte[] b = new byte[5];
+		byte[] b = new byte[3 + DEF_DECIMALS];
 		
 		// Convert bits to bytes and insert into byte array
 		for(int i = 0; i < 8; i++)
@@ -105,7 +106,7 @@ public class TSensor {
 	}
 	
 	/**
-	 * Formats the current temperature with a desired amount of decimals.
+	 * Formats the current temperature with a given amount of decimals.
 	 * <p>
 	 * The format will drop any trailing zeros.
 	 * E.g. digits = 2, temperature has been read to 21.90, will be returned as 21.9.
