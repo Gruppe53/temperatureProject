@@ -77,10 +77,10 @@ public class TSensor {
 	 */
 	public byte[] getTemperatureAsByte() {
 		// Convert double to bits
-		long l = Double.doubleToLongBits(d.getTemperature());
+		long l = Double.doubleToLongBits(getTemperatureAsDouble(2));
 		
 		// Create new byte array
-		byte[] b = new byte[100];
+		byte[] b = new byte[5];
 		
 		// Convert bits to bytes and insert into byte array
 		for(int i = 0; i < 8; i++)

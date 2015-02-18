@@ -47,6 +47,7 @@ public class TClient {
 		sensor = new TSensor();
 		
 		System.out.println("Sensor initialized with temperature: " + sensor.getTemperatureAsDouble(2));
+		
 		try {
 			// Create client and I/O objects
 			client = new Socket(this.SERVER_HOST, this.SERVER_PORT);
@@ -55,15 +56,6 @@ public class TClient {
 			
 			// If client and I/O objects are created...
 			if(client != null && output != null && input != null) {
-				System.out.println("meh");
-				try {
-					output.writeDouble(sensor.getTemperatureAsDouble());
-				} catch(IOException e) {
-					System.out.println(e.getMessage());
-				}
-				
-				System.out.println("meh2");
-				
 				// Create a scheduled executor service so we can keep sending new data to the server with a specific interval
 				ScheduledExecutorService exe = Executors.newSingleThreadScheduledExecutor();
 				
@@ -72,13 +64,12 @@ public class TClient {
 						// What should be done every update interval
 						@Override
 						public void run() {
-							// Set new temperature
-							sensor.newTemperature();
-							
-							System.out.println("Changed the temperature: " + sensor.getTemperatureAsDouble(2));
-							
-							// Output new temperature to server as bytes
 							try {
+								// Set new temperature
+								sensor.newTemperature();
+								System.out.println("Changed the temperature: " + sensor.getTemperatureAsDouble(2));
+								
+								// Output new temperature to server as bytes
 								output.write(sensor.getTemperatureAsByte());
 								System.out.println("New temperature sent to server.");
 							} catch (IOException e) {
@@ -89,6 +80,19 @@ public class TClient {
 				0,						// Start immediately
 				this.UPDATE_INTERVAL,	// The update interval (by default 5000)
 				this.UPDATE_UNIT); // Defines the UPDATE_INTERVAL unit
+				
+				// Print response
+				String res;
+				
+				while((res = input.readUTF()) != null) {
+					System.out.println("Server: " + res);
+					
+					// If "END" is recieved, stop printing AND stop executor
+					if(res.indexOf("END") != -1) {
+						exe.shutdown();
+						break;
+					}
+				}
 			}
 		} catch (UnknownHostException e) {
 			System.out.println("Host not recognized.");

@@ -7,32 +7,41 @@ import java.net.Socket;
 
 public class RTClient implements Runnable {
 	protected Socket client = null;
-	protected String msg;
+	protected String location;
 	private DataInputStream input;
 	private PrintStream printer;
+	private int updates;
+	
+	// Default values
+	private final int MAX_UPDATES = 100;
 	
 	public RTClient(Socket client) {
 		this.client = client;
+		this.updates = 0;
 	}
 
 	@Override
 	public void run() {
 		try {
-			// Input FROM client
+			// Create IO objects
 			input = new DataInputStream(client.getInputStream());
-			// Output TO client
 			printer = new PrintStream(client.getOutputStream());
 			
+			// Read input and return with answer.
 			while(true) {
 				// Testing... nothing is working :<
-				String str = input.readUTF();
+				String d;
+				if((d = input.readUTF()) != null) {
+					System.out.println(d);
+					printer.print(d.toCharArray());
+					
+					updates++;
+				}
 				
-				double dou = input.readDouble();
-				
-				System.out.println(str);
-				System.out.println(dou);
-				
-				printer.println(dou);
+				if(updates == MAX_UPDATES) {
+					printer.print("END".toCharArray());
+					break;
+				}
 			}
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
