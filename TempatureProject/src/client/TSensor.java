@@ -106,7 +106,9 @@ public class TSensor {
 	
 	/**
 	 * Formats the current temperature with a desired amount of decimals.
-	 * The format will drop any trailing zeros (0.90 will be returned as 0.9).
+	 * <p>
+	 * The format will drop any trailing zeros.
+	 * E.g. digits = 2, temperature has been read to 21.90, will be returned as 21.9.
 	 * 
 	 * @param digits the amount of desired decimals
 	 * @return the desired format of the temperature
@@ -114,7 +116,7 @@ public class TSensor {
 	public double getTemperatureAsDouble(int digits) {
 		String decimals = "#.";
 		
-		for(int i = 0; i < digits; i++)
+		for(;digits != 0; digits--)
 			decimals += "#";
 		
 		DecimalFormat dFormat = new DecimalFormat(decimals);
