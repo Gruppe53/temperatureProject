@@ -5,27 +5,23 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import client.GUI.ClientGUI;
-
-public class TemperatureClient {
-	private TemperatureSensor sensor;
+public class TClient {
+	private TSensor sensor;
 	private Socket client;
 	private DataInputStream input;
 	private DataOutputStream output;
-	private ClientGUI gui;
 	
 	// Default values
 	private final String SERVER_HOST = "localhost";
 	private final int SERVER_PORT = 15051;
-	private final int UPDATE_INTERVAL = 5000; // Given in miliseconds (1 second = 1.000 miliseconds)
+	private final int UPDATE_INTERVAL = 5000;
+	private final TimeUnit UPDATE_UNIT = TimeUnit.MILLISECONDS;
 	
-	public TemperatureClient() {
+	public TClient() {
 		// TODO TemperatureClient.main
 		/**
 		 * 1. Create CLI-object (Apache Commons CLI, JAR already included in project)
@@ -47,55 +43,61 @@ public class TemperatureClient {
 		 * Try to create a GUI 
 		 */
 		
-		// Start GUI
-		gui = new ClientGUI();
-		
-		gui.createAndShowGUI("Temperature Client");
-		
-		gui.updateTemp("5");
-		
 		// Create sensor
-		sensor = new TemperatureSensor();
+		sensor = new TSensor();
+		
+		System.out.println("Sensor initialized with temperature: " + sensor.getTemperatureAsDouble(2));
 		
 		try {
 			// Create client and I/O objects
-			client = new Socket(SERVER_HOST, SERVER_PORT);
+			client = new Socket(this.SERVER_HOST, this.SERVER_PORT);
 			output = new DataOutputStream(client.getOutputStream());
 			input = new DataInputStream(client.getInputStream());
 			
 			// If client and I/O objects are created...
 			if(client != null && output != null && input != null) {
-				// Create a scheduled executor service so we can keep sending new data to server
+				try {
+					output.write(sensor.getTemperatureAsByte());
+				} catch(IOException e) {
+					System.out.println(e.getMessage());
+				}
+				
+				// Create a scheduled executor service so we can keep sending new data to the server with a specific interval
 				ScheduledExecutorService exe = Executors.newSingleThreadScheduledExecutor();
 				
 				// Define executor service
 				exe.scheduleAtFixedRate(new Runnable() {
-					@Override
-					public void run() {
-						// Set new temperature
-						sensor.newTemperature();
-						
-						try {
-							// Output new temperature to server
-							output.write(sensor.getTemperatureAsByte());;
-						} catch (IOException e) {
-							System.out.println(e.getMessage());
+						// What should be done every update interval
+						@Override
+						public void run() {
+							// Set new temperature
+							sensor.newTemperature();
+							
+							System.out.println("Changed the temperature: " + sensor.getTemperatureAsDouble(2));
+							
+							// Output new temperature to server as bytes
+							try {
+								output.write(sensor.getTemperatureAsByte());
+								System.out.println("New temperature sent to server.");
+							} catch (IOException e) {
+								System.out.println(e.getMessage());
+							}
 						}
-					}
-				}, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS); // 0 = start immediately (no delay), UPDATE_INTERVAL = 5000 update every 5000 miliseconds (5 seconds)
+					},					// Runnable block-end
+				0,						// Start immediately
+				this.UPDATE_INTERVAL,	// The update interval (by default 5000)
+				this.UPDATE_UNIT); // Defines the UPDATE_INTERVAL unit
 			}
 		} catch (UnknownHostException e) {
-			System.out.println(e.getMessage());
+			System.out.println("Host not recognized.");
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
+			System.out.println("IO Exception.");
 		}
 	}
 	
+	
+	// Start the client...
 	public static void main(String[] args) {
-		new Runnable() {
-			public void run() {
-				new TemperatureClient();
-			}
-		};
+		new TClient();
 	}
 }

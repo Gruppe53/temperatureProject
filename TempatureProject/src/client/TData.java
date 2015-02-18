@@ -1,11 +1,11 @@
 package client;
 
-public class RNGData {
+public class TData {
 	private double temperature;
 	private double factor;
 	
 	// Specify start temperature and factor
-	public RNGData(double temperature, double factor) {
+	public TData(double temperature, double factor) {
 		this.temperature = temperature;
 		this.factor = factor;
 	}

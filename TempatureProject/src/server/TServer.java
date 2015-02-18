@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class TemperatureServer implements Runnable {
+public class TServer implements Runnable {
 	protected Thread thread = null;
 	protected ServerSocket server;
 	
 	// Default values
 	private final int SERVER_PORT = 15051;
 	
-	public TemperatureServer() {
+	public TServer() {
 		// TODO TemperatureServer.main
 		/*
 		 * 1. Create server with specified port
@@ -55,9 +55,9 @@ public class TemperatureServer implements Runnable {
 			System.out.println(e.getMessage());
 		}
 		
-		// When connected add as new thread
+		// When client is connected add as new thread
 		new Thread(
-			new RunningClient(client, "Client")
+			new RTClient(client)
 		).start();
 	}
 	
@@ -70,6 +70,7 @@ public class TemperatureServer implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		new TemperatureServer();
+		TServer server = new TServer();
+		new Thread(server).start();
 	}
 }
