@@ -33,11 +33,11 @@ public class RTClient implements Runnable {
 				// Testing... nothing is working :<
 				String d;
 				if((d = input.readUTF()) != null) {
-					System.out.println(d);
+					System.out.println("Received temperature: " + d + "[" + this.location + "]");
 					
 					String res = null;
 					
-					res += "["+this.location+"]";
+					res += "[" + this.location + "]";
 					res += d;
 					
 					printer.print(res.toCharArray());
