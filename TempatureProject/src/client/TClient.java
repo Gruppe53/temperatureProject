@@ -18,7 +18,7 @@ public class TClient {
 	// Default values
 	private final String SERVER_HOST = "localhost";
 	private final int SERVER_PORT = 15051;
-	private final int UPDATE_INTERVAL = 5000;
+	private final int UPDATE_INTERVAL = 2000;
 	private final TimeUnit UPDATE_UNIT = TimeUnit.MILLISECONDS;
 	
 	public TClient() {
@@ -47,7 +47,6 @@ public class TClient {
 		sensor = new TSensor();
 		
 		System.out.println("Sensor initialized with temperature: " + sensor.getTemperatureAsDouble(2));
-		
 		try {
 			// Create client and I/O objects
 			client = new Socket(this.SERVER_HOST, this.SERVER_PORT);

@@ -52,7 +52,7 @@ public class TServer implements Runnable {
 				
 				client = server.accept();
 				
-				System.out.println("Client from " + client.getLocalAddress() + " connected");
+				System.out.println("Client [" + client.getLocalAddress() + "] connected");
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
 			}
