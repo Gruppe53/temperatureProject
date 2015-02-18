@@ -8,7 +8,7 @@ import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TemperatureStorage {
+public class TStorage {
 
 	public static boolean storeTemperature(byte[] b) {
 		// TODO
@@ -20,12 +20,12 @@ public class TemperatureStorage {
 			File f = new File("materials/temperature");
 			
 			if (f.exists() && !f.isDirectory()) {
-				writeToFile(f, TemperatureConverter.temperatureToChar(b));
+				writeToFile(f, TConverter.temperatureToChar(b));
 				return true;
 			} 
 			else {
 				f.createNewFile();
-				writeToFile(f, TemperatureConverter.temperatureToChar(b));
+				writeToFile(f, TConverter.temperatureToChar(b));
 				return true;
 			}
 			

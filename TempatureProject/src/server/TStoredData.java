@@ -1,6 +1,6 @@
 package server;
 
-public class TempStore {
+public class TStoredData {
 	private byte temp;
 
 	public byte getTemp() {
