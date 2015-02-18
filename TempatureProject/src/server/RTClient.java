@@ -6,8 +6,8 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 public class RTClient implements Runnable {
-	protected Socket client = null;
-	protected String location;
+	private Socket client = null;
+	private String location;
 	private DataInputStream input;
 	private PrintStream printer;
 	private int updates;
@@ -15,8 +15,9 @@ public class RTClient implements Runnable {
 	// Default values
 	private final int MAX_UPDATES = 100;
 	
-	public RTClient(Socket client) {
+	public RTClient(Socket client, String location) {
 		this.client = client;
+		this.location = location;
 		this.updates = 0;
 	}
 
@@ -33,18 +34,37 @@ public class RTClient implements Runnable {
 				String d;
 				if((d = input.readUTF()) != null) {
 					System.out.println(d);
-					printer.print(d.toCharArray());
+					
+					String res = null;
+					
+					res += "["+this.location+"]";
+					res += d;
+					
+					printer.print(res.toCharArray());
 					
 					updates++;
 				}
 				
+				// Stop loop if MAX_UPDATES is matched
 				if(updates == MAX_UPDATES) {
 					printer.print("END".toCharArray());
 					break;
 				}
+				
+				// End and close (with finally-block) all resources
+				if(client.isClosed())
+					break;
 			}
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
+		} finally {
+			try {
+				input.close();
+				printer.close();
+				client.close();
+			} catch(IOException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 }

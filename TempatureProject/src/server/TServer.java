@@ -55,12 +55,12 @@ public class TServer implements Runnable {
 				System.out.println("Client [" + client.getLocalAddress() + "] connected");
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
+			} finally {
+				// When client is connected add as new thread
+				new Thread(
+					new RTClient(client, "Unknown")
+				).start();
 			}
-			
-			// When client is connected add as new thread
-			new Thread(
-				new RTClient(client)
-			).start();
 		}
 	}
 	

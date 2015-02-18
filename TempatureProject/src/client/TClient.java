@@ -98,6 +98,14 @@ public class TClient {
 			System.out.println("Host not recognized.");
 		} catch (IOException e) {
 			System.out.println("IO Exception.");
+		} finally {
+			try {
+				input.close();
+				output.close();
+				client.close();
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 	
