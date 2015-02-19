@@ -1,5 +1,6 @@
 package client;
 
+import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Random;
@@ -14,7 +15,6 @@ public class TSensor {
 	private final double MAX_FAC	=  0.10; // Maximum init factor
 	private final double MIN_FAC	=  0.01; // Minimum init factor
 	private final double INIT_FAC	=  0.05; // Default init factor
-	private final int DEF_DECIMALS	= 2;	 // Default number of decimals
 	
 	// Class constructor with default data values
 	public TSensor() {
@@ -55,6 +55,7 @@ public class TSensor {
 	 * it will either set the temperature to 24 or 14, respectively
 	 */
 	public void newTemperature() {
+		double curTemp = d.getTemperature();
 		double newTemp;
 		
 		Random r = new Random();
@@ -64,16 +65,16 @@ public class TSensor {
 		
 		if(r.nextBoolean())
 			// Increase
-			d.setTemperature(d.getTemperature() *  (1 + newTemp));
+			d.setTemperature(curTemp *  (1 + newTemp));
 		else
 			// Decrease
-			d.setTemperature(d.getTemperature() * (1 - newTemp));
+			d.setTemperature(curTemp * (1 - newTemp));
 		
-		// If temperature is above/below minimum, round down/up
-		if(d.getTemperature() > MAX_TEMP)
+		// If temperature is above/below minimum, set to maximum/minimum temperature
+		if(curTemp > MAX_TEMP)
 			d.setTemperature(MAX_TEMP);
 		
-		if(d.getTemperature() < MIN_TEMP)
+		if(curTemp < MIN_TEMP)
 			d.setTemperature(MIN_TEMP);
 	}
 	
@@ -83,15 +84,11 @@ public class TSensor {
 	 * @return the temperature as a byte-array.
 	 */
 	public byte[] getTemperatureAsByte() {
-		// Convert double to bits
-		long l = Double.doubleToLongBits(getTemperatureAsDouble(DEF_DECIMALS));
-		
-		// Create new byte array (long = 8 bytes as JVM is platform independent)
+		// Create new byte array (double = 8 bytes as JVM is platform independent)
 		byte[] b = new byte[8];
 		
-		// Convert bits to bytes and insert into byte array
-		for(int i = 0; i < 8; i++)
-			b[i] = (byte) ((l >> ((7 - i) * 8)) & 0xff);
+		// Wrap bytes from double in b byte array
+		ByteBuffer.wrap(b).putDouble(getTemperatureAsDouble());
 		
 		return b;
 	}
@@ -116,7 +113,8 @@ public class TSensor {
 	 * @return the desired format of the temperature
 	 */
 	public double getTemperatureAsDouble(int digits) {
-		String decimals = "##.";
+		// TODO Instead of DecimalFormatSymbols.setDecimalSeparator, find a solution where we force a specific locale to be used.
+		String decimals = "#.";
 		
 		for(;digits != 0; digits--)
 			decimals += "#";

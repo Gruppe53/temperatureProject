@@ -18,10 +18,10 @@ public class TClient {
 	// Default values
 	private final String SERVER_HOST = "192.168.1.206";
 	private final int SERVER_PORT = 15051;
-	private final int UPDATE_INTERVAL = 2000;
+	private final int UPDATE_INTERVAL = 5000;
 	private final TimeUnit UPDATE_UNIT = TimeUnit.MILLISECONDS;
 	
-	public TClient() {		
+	public TClient() {	
 		// Create sensor
 		sensor = new TSensor();
 		
@@ -40,6 +40,7 @@ public class TClient {
 				// Create a scheduled executor service so we can keep sending new data to the server with a specific interval
 				ScheduledExecutorService exe = Executors.newSingleThreadScheduledExecutor();
 				
+				// TODO Find a way to close executor if socket is closed.........
 				// Define executor service
 				exe.scheduleAtFixedRate(new Runnable() {
 						// What should be done every update interval
@@ -50,8 +51,10 @@ public class TClient {
 								sensor.newTemperature();
 								System.out.println("Changed the temperature: " + sensor.getTemperatureAsDouble(2));
 								
+								output.writeBytes("hej");
+								
 								// Output new temperature to server as bytes
-								output.write(sensor.getTemperatureAsByte());
+								//utput.write(sensor.getTemperatureAsByte());
 								System.out.println("New temperature sent to server.");
 							} catch (IOException e) {
 								System.out.println(e.getMessage());
@@ -72,15 +75,10 @@ public class TClient {
 						exe.shutdown();
 						break;
 					}
-					
-					if(!client.isConnected()) {
-						exe.shutdown();
-						break;
-					}
 				}
 				
 				// If we end up here exe should be shut down, if not already...
-				exe.shutdown();
+				exe.shutdownNow();
 			}
 		} catch (UnknownHostException e) {
 			System.out.println("Host not recognized.");

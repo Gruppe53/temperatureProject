@@ -1,16 +1,16 @@
 package server;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.Socket;
 
 public class RTClient implements Runnable {
 	private Socket client = null;
 	private String location;
 	private BufferedReader input;
-	private PrintStream printer;
+	private DataOutputStream output;
 	private int updates;
 	
 	// Default values
@@ -27,29 +27,27 @@ public class RTClient implements Runnable {
 		try {
 			// Create IO objects
 			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			printer = new PrintStream(client.getOutputStream());
+			output = new DataOutputStream(client.getOutputStream());
 			
 			// Read input and return with answer
 			while(true) {
-				int d;
-				char[] buffer = new char[8];
+				String s;
 				
-				if((d = input.read(buffer)) > 0) {
-					System.out.println("Received temperature: " + d + " [" + this.location + "]");
+				if((s = input.readLine()) != null) {
+					System.out.println("Received temperature: " + s + " [" + this.location + "]");
 					
-					String res = null;
+					s += "[" + this.location + "]";
 					
-					res += "[" + this.location + "]";
-					res += d;
-					
-					printer.print(res.toCharArray());
+					// TODO Proper conversion to bytes before responding
+					output.write(s.getBytes());
 					
 					updates++;
 				}
 				
+				// TODO Proper conversion to bytes before responding
 				// Stop loop if MAX_UPDATES is matched
 				if(updates == MAX_UPDATES) {
-					printer.print("END".toCharArray());
+					output.write("END".getBytes());
 					break;
 				}
 				
@@ -62,7 +60,7 @@ public class RTClient implements Runnable {
 		} finally {
 			try {
 				input.close();
-				printer.close();
+				output.close();
 				client.close();
 			} catch(IOException e) {
 				System.out.println(e.getMessage());
