@@ -17,15 +17,13 @@ public class TClient {
 	
 	// Default values
 	private final String SERVER_HOST = "192.168.1.206";
-	private final int SERVER_PORT = 15051;
+	private final int SERVER_PORT = 10001;
 	private final int UPDATE_INTERVAL = 5000;
 	private final TimeUnit UPDATE_UNIT = TimeUnit.MILLISECONDS;
 	
 	public TClient() {	
 		// Create sensor
 		sensor = new TSensor();
-		
-		sensor.newTemperature();
 		
 		System.out.println("Sensor initialized with temperature: " + sensor.getTemperatureAsDouble(2));
 		
@@ -51,10 +49,8 @@ public class TClient {
 								sensor.newTemperature();
 								System.out.println("Changed the temperature: " + sensor.getTemperatureAsDouble(2));
 								
-								output.writeBytes("hej");
-								
 								// Output new temperature to server as bytes
-								//utput.write(sensor.getTemperatureAsByte());
+								output.write(sensor.getTemperatureAsByte());
 								System.out.println("New temperature sent to server.");
 							} catch (IOException e) {
 								System.out.println(e.getMessage());

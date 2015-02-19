@@ -9,9 +9,10 @@ public class TServer implements Runnable {
 	protected ServerSocket server;
 	
 	// Default values
-	private final int SERVER_PORT = 15051;
+	private final int SERVER_PORT = 10001;
 	
 	public TServer() {
+		System.out.println("Waiting for client...\n");
 	}
 
 	@Override
@@ -29,9 +30,6 @@ public class TServer implements Runnable {
 			Socket client = null;
 			
 			try {
-				System.out.println("Waiting for client...");
-				System.out.println();
-				
 				client = server.accept();
 				
 				System.out.println("Client [" + client.getLocalAddress() + "] connected");
