@@ -16,7 +16,7 @@ public class TClient {
 	private DataOutputStream output;
 	
 	// Default values
-	private final String SERVER_HOST = "192.168.1.206";
+	private final String SERVER_HOST = "192.168.1.206"; // TODO Change to localhost
 	private final int SERVER_PORT = 10001;
 	private final int UPDATE_INTERVAL = 5000;
 	private final TimeUnit UPDATE_UNIT = TimeUnit.MILLISECONDS;

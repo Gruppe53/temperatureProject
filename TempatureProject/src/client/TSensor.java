@@ -16,7 +16,9 @@ public class TSensor {
 	private final double MIN_FAC	=  0.01; // Minimum init factor
 	private final double INIT_FAC	=  0.05; // Default init factor
 	
-	// Class constructor with default data values
+	/**
+	 *  Class constructor with default {@link TData} values
+	 */
 	public TSensor() {
 		d = new TData(INIT_TEMP, INIT_FAC);
 	}
@@ -26,15 +28,15 @@ public class TSensor {
 	 * The temperature argument has to be within the acceptable range (14-21).
 	 * The factor argument has to be within the acceptable range (0.01 - 0.1).
 	 * 
-	 * @param temperature	the initial temperature value
-	 * @param factor		the factor which is used to determine the maximum increase or decrease of the temperature
-	 * @throws IllegalArgumentException
+	 * @param temperature	the initial temperature value.
+	 * @param factor		the factor which is used to determine the maximum increase or decrease of the temperature.
+	 * @throws IllegalArgumentException if the given temperature or factor is above or below the acceptable range.
 	 */
 	public TSensor(int temperature, double factor) throws IllegalArgumentException {
 		// Specify initial data values
 		if(temperature >= MIN_TEMP && temperature <= MAX_TEMP) // Check that temperature is within acceptable range
 			if(factor >= MIN_FAC && factor <= MAX_FAC) // Check that factor is within acceptable range
-				d = new TData(temperature, factor); // Create RNGData with parameter values
+				d = new TData(temperature, factor); // Create TData with parameter values
 			else
 				throw new IllegalArgumentException("Factor is not within acceptable range (" + MIN_FAC + "-" + MAX_FAC +")");
 		else
@@ -52,7 +54,7 @@ public class TSensor {
 	 * Current temperature * (1 (+ OR -) newTemp).
 	 * <p>
 	 * If the new temperature is above or below the acceptable range (14-24)
-	 * it will either set the temperature to 24 or 14, respectively
+	 * it will either set the temperature to 24 or 14, respectively.
 	 */
 	public void newTemperature() {
 		double curTemp = d.getTemperature();
@@ -97,7 +99,7 @@ public class TSensor {
 	 * Will return the current temperature as a double. It will include all decimals.
 	 * An integer argument can be given to decide the amount of decimals.
 	 * 
-	 * @return the current temperature
+	 * @return the current temperature.
 	 */
 	public double getTemperatureAsDouble() {
 		return d.getTemperature();
@@ -109,8 +111,8 @@ public class TSensor {
 	 * The format will drop any trailing zeros.
 	 * E.g. digits = 2, temperature has been read to 21.90, will be returned as 21.9.
 	 * 
-	 * @param digits the amount of desired decimals
-	 * @return the desired format of the temperature
+	 * @param digits the amount of desired decimals.
+	 * @return the desired format of the temperature.
 	 */
 	public double getTemperatureAsDouble(int digits) {
 		// TODO Instead of DecimalFormatSymbols.setDecimalSeparator, find a solution where we force a specific locale to be used.

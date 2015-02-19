@@ -4,13 +4,18 @@ public class TData {
 	private double temperature;
 	private double factor;
 	
-	// Specify start temperature and factor
+	/**
+	 * Class constructor for TData which holds the current temperature and a factor.
+	 * The factor is used to determine the maximum variation in temperature (from 0.00 up to factor).
+	 * 
+	 * @param temperature is the initial temperature in the room
+	 * @param factor maximum variation in temperature
+	 */
 	public TData(double temperature, double factor) {
 		this.temperature = temperature;
 		this.factor = factor;
 	}
 	
-	// Getters/setters
 	public double getTemperature() {
 		return temperature;
 	}
