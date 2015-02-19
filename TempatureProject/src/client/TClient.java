@@ -16,7 +16,7 @@ public class TClient {
 	private DataOutputStream output;
 	
 	// Default values
-	private final String SERVER_HOST = "localhost";
+	private final String SERVER_HOST = "192.168.1.206";
 	private final int SERVER_PORT = 15051;
 	private final int UPDATE_INTERVAL = 2000;
 	private final TimeUnit UPDATE_UNIT = TimeUnit.MILLISECONDS;
@@ -24,6 +24,8 @@ public class TClient {
 	public TClient() {		
 		// Create sensor
 		sensor = new TSensor();
+		
+		sensor.newTemperature();
 		
 		System.out.println("Sensor initialized with temperature: " + sensor.getTemperatureAsDouble(2));
 		
@@ -58,7 +60,7 @@ public class TClient {
 					},					// Runnable block-end
 				0,						// Start immediately
 				this.UPDATE_INTERVAL,	// The update interval (by default 5000)
-				this.UPDATE_UNIT); // Defines the UPDATE_INTERVAL unit
+				this.UPDATE_UNIT);		// Defines the UPDATE_INTERVAL unit
 				
 				// Print response
 				String res;
@@ -70,7 +72,15 @@ public class TClient {
 						exe.shutdown();
 						break;
 					}
+					
+					if(!client.isConnected()) {
+						exe.shutdown();
+						break;
+					}
 				}
+				
+				// If we end up here exe should be shut down, if not already...
+				exe.shutdown();
 			}
 		} catch (UnknownHostException e) {
 			System.out.println("Host not recognized.");

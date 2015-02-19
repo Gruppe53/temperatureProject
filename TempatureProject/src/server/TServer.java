@@ -30,6 +30,7 @@ public class TServer implements Runnable {
 			
 			try {
 				System.out.println("Waiting for client...");
+				System.out.println();
 				
 				client = server.accept();
 				

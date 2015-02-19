@@ -1,6 +1,7 @@
 package client;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Random;
 
 public class TSensor {
@@ -85,8 +86,8 @@ public class TSensor {
 		// Convert double to bits
 		long l = Double.doubleToLongBits(getTemperatureAsDouble(DEF_DECIMALS));
 		
-		// Create new byte array
-		byte[] b = new byte[3 + DEF_DECIMALS];
+		// Create new byte array (long = 8 bytes as JVM is platform independent)
+		byte[] b = new byte[8];
 		
 		// Convert bits to bytes and insert into byte array
 		for(int i = 0; i < 8; i++)
@@ -115,13 +116,18 @@ public class TSensor {
 	 * @return the desired format of the temperature
 	 */
 	public double getTemperatureAsDouble(int digits) {
-		String decimals = "#.";
+		String decimals = "##.";
 		
 		for(;digits != 0; digits--)
 			decimals += "#";
 		
 		DecimalFormat dFormat = new DecimalFormat(decimals);
+		DecimalFormatSymbols df = new DecimalFormatSymbols();
 		
-		return new Double(dFormat.format(d.getTemperature()));
+		df.setDecimalSeparator('.');
+		
+		dFormat.setDecimalFormatSymbols(df);
+		
+		return new Double(dFormat.format(getTemperatureAsDouble()));
 	}
 }

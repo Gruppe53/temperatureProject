@@ -1,14 +1,15 @@
 package server;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
 public class RTClient implements Runnable {
 	private Socket client = null;
 	private String location;
-	private DataInputStream input;
+	private BufferedReader input;
 	private PrintStream printer;
 	private int updates;
 	
@@ -25,15 +26,16 @@ public class RTClient implements Runnable {
 	public void run() {
 		try {
 			// Create IO objects
-			input = new DataInputStream(client.getInputStream());
+			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			printer = new PrintStream(client.getOutputStream());
 			
-			// Read input and return with answer.
+			// Read input and return with answer
 			while(true) {
-				// Testing... nothing is working :<
-				String d;
-				if((d = input.readUTF()) != null) {
-					System.out.println("Received temperature: " + d + "[" + this.location + "]");
+				int d;
+				char[] buffer = new char[8];
+				
+				if((d = input.read(buffer)) > 0) {
+					System.out.println("Received temperature: " + d + " [" + this.location + "]");
 					
 					String res = null;
 					
@@ -51,7 +53,7 @@ public class RTClient implements Runnable {
 					break;
 				}
 				
-				// End and close (with finally-block) all resources
+				// End and close (with finally-block) all resources if client disconnects
 				if(client.isClosed())
 					break;
 			}
