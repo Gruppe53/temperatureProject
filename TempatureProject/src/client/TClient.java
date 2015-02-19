@@ -38,10 +38,7 @@ public class TClient {
 				// Create a scheduled executor service so we can keep sending new data to the server with a specific interval
 				ScheduledExecutorService exe = Executors.newSingleThreadScheduledExecutor();
 				
-				// TODO Find a way to close executor if socket is closed......... (tjek om virker)
-				if (client.isClosed()){
-					exe.shutdown();
-				}
+				// TODO Find a way to close executor if socket is closed.........
 				// Define executor service
 				exe.scheduleAtFixedRate(new Runnable() {
 						// What should be done every update interval
