@@ -39,6 +39,9 @@ public class TClient {
 				ScheduledExecutorService exe = Executors.newSingleThreadScheduledExecutor();
 				
 				// TODO Find a way to close executor if socket is closed.........
+				if (client.isClosed()){
+					exe.shutdown();
+				}
 				// Define executor service
 				exe.scheduleAtFixedRate(new Runnable() {
 						// What should be done every update interval
