@@ -16,6 +16,20 @@ public class RTClient implements Runnable {
 	// Default values
 	private final int MAX_UPDATES = 100;
 	
+	/**
+	 * Class-constructor that takes two parameters - a client socket and a room location/description.
+	 * <p>
+	 * Note that "RunningTClient" can't (shouldn't) be manipulated with. It is supposed to run as a single
+	 * thread (Runnable), and keep doing so until the server has received <MAX_UPDATES> temperatures from client.
+	 * <p>
+	 * RTClient will terminate any resources if incoming client closes the connection or "END"-message has
+	 * been sent to client (indicating <MAX_UPDATES> has been met).
+	 * <p>
+	 * <MAX_UPDATES> should be removed if this program ever leaves test phase...
+	 * 
+	 * @param client	the client socket
+	 * @param location	the location or description of the client
+	 */
 	public RTClient(Socket client, String location) {
 		this.client = client;
 		this.location = location;
@@ -29,10 +43,19 @@ public class RTClient implements Runnable {
 			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			output = new DataOutputStream(client.getOutputStream());
 			
-			// TODO Input should be read and stored. Create a list with each stored temperature. Every time we've added
-			// something to this list, also calculate an average and print this average in the server console.
+			/**
+			 *  TODO Input should be read and stored. Create a list with each stored temperature.
+			 *  Every time we've added something to this list calculate an average and print 
+			 *  this average in the server console.
+			 *  
+			 *  1.	Read input
+			 *  2.	Save input as TStoredData-object in List<TStoredData (use "new ArrayList<TStoredData>")
+			 *  2b.	Calculate average temperature.
+			 *  2c. Print calculated average.
+			 *  2d. Remember to add 1 to "updates".
+			 */
 			
-			// Read input and return with answer
+			// Test...
 			while(true) {
 				String s;
 				
