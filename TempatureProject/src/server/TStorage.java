@@ -50,13 +50,14 @@ public class TStorage {
 
 	}
 
-	public static String readTemperature() {
+	public static byte[] readTemperature() {
 		// TODO
 		/*
 		 * 1. Read file from disk 2. If not given as bytes, convert back to
 		 * bytes 3. Return bytes read from disk
 		 */
 		String str = null;
+		byte b[];
 		
 		try {
 			FileReader fr = new FileReader("temperature.txt");
@@ -68,8 +69,9 @@ public class TStorage {
 				str += c;
 			}
 			fr.close();
+			b = str.getBytes("UTF-8");
 
-			return str;
+			return b;
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
