@@ -29,6 +29,9 @@ public class RTClient implements Runnable {
 			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			output = new DataOutputStream(client.getOutputStream());
 			
+			// TODO Input should be read and stored. Create a list with each stored temperature. Every time we've added
+			// something to this list, also calculate an average and print this average in the server console.
+			
 			// Read input and return with answer
 			while(true) {
 				String s;
