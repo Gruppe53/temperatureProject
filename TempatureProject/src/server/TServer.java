@@ -12,7 +12,7 @@ public class TServer implements Runnable {
 	private final int SERVER_PORT = 10001;
 	
 	public TServer() {
-		System.out.println("Waiting for client...\n");
+		System.out.println("Waiting for clients...\n");
 	}
 
 	@Override
