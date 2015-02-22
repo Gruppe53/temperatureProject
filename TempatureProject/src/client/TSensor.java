@@ -91,7 +91,7 @@ public class TSensor {
 		byte[] b = new byte[8];
 		
 		// Wrap bytes from double in b byte array
-		ByteBuffer.wrap(b).putDouble(getTemperatureAsDouble());
+		ByteBuffer.wrap(b).putDouble(getTemperatureAsDouble(2));
 		
 		return b;
 	}

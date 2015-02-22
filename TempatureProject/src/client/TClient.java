@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -16,8 +17,8 @@ public class TClient {
 	private DataOutputStream output;
 	
 	// Default values
-	private final String SERVER_HOST = "192.168.1.206"; // TODO Change to localhost
-	private final int SERVER_PORT = 10001;
+	private final String SERVER_HOST = "localhost"; // TODO Change to localhost
+	private final int SERVER_PORT = 17003;
 	private final int UPDATE_INTERVAL = 5000;
 	private final TimeUnit UPDATE_UNIT = TimeUnit.MILLISECONDS;
 	
@@ -67,6 +68,7 @@ public class TClient {
 					System.out.println("Server: " + res);
 					
 					// If "END" is recieved, stop printing AND stop executor
+					// Not working
 					if(res.indexOf("END") != -1) {
 						exe.shutdown();
 						break;

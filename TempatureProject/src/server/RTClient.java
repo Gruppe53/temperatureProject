@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class RTClient implements Runnable {
@@ -46,15 +47,13 @@ public class RTClient implements Runnable {
 			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			output = new DataOutputStream(client.getOutputStream());
 			
-			// We create cbuf because save the input in, as char so that we can convert it to string, 
+			// We create cbuf to save the input in, as char so that we can convert it to string, 
 			// and convert the sting to double
 			char[] cbuf = new char[5];
 			
 			while(true){
 				// -1 is the end character we get from the input
 				if((input.read(cbuf)) != -1){
-					// save the input into cbuf
-					input.read(cbuf);
 					// add the input in the arraylist tData
 					tData.add(new TStoredData(
 							Double.parseDouble(
@@ -69,13 +68,19 @@ public class RTClient implements Runnable {
 					}
 					
 					// Print out the average
-					System.out.println(average);
+					System.out.println(average + " [" + location + "]");
 					
 					updates++;
 				}
 				
-				// If update hits 100 or the client is closed we end the while loop
-				if(updates == 100 || client.isClosed())
+				// If update hits 100 break while loop
+				if(updates == MAX_UPDATES) {
+					output.write("END".getBytes());
+					break;
+				}
+			
+				// If the client is closed break while loop
+				if(client.isClosed())
 					break;
 			}
 			

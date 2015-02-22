@@ -9,7 +9,7 @@ public class TServer implements Runnable {
 	protected ServerSocket server;
 	
 	// Default values
-	private final int SERVER_PORT = 10001;
+	private final int SERVER_PORT = 17003;
 	
 	public TServer() {
 		System.out.println("Waiting for clients...\n");
