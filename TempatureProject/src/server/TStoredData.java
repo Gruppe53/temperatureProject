@@ -1,14 +1,18 @@
 package server;
 
 public class TStoredData {
-	private byte temp;
+	private double temperature;
 
-	public byte getTemp() {
-		return temp;
+	public TStoredData(double temperature) {
+		this.temperature = temperature;
 	}
 
-	public void setTemp(byte temp) {
-		this.temp = temp;
+	public double getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(double temperature) {
+		this.temperature = temperature;
 	}
 }
 

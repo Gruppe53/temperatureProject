@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class RTClient implements Runnable {
 	private Socket client = null;
@@ -12,6 +13,8 @@ public class RTClient implements Runnable {
 	private BufferedReader input;
 	private DataOutputStream output;
 	private int updates;
+	private ArrayList<TStoredData> tData = new ArrayList<TStoredData>();
+	private double average;
 	
 	// Default values
 	private final int MAX_UPDATES = 100;
@@ -43,44 +46,39 @@ public class RTClient implements Runnable {
 			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			output = new DataOutputStream(client.getOutputStream());
 			
-			/**
-			 *  TODO Input should be read and stored. Create a list with each stored temperature.
-			 *  Every time we've added something to this list calculate an average and print 
-			 *  this average in the server console.
-			 *  
-			 *  1.	Read input
-			 *  2.	Save input as TStoredData-object in List<TStoredData (use "new ArrayList<TStoredData>")
-			 *  2b.	Calculate average temperature.
-			 *  2c. Print calculated average.
-			 *  2d. Remember to add 1 to "updates".
-			 */
+			// We create cbuf because save the input in, as char so that we can convert it to string, 
+			// and convert the sting to double
+			char[] cbuf = new char[5];
 			
-			// Test...
-			while(true) {
-				String s;
-				
-				if((s = input.readLine()) != null) {
-					System.out.println("Received temperature: " + s + " [" + this.location + "]");
+			while(true){
+				// -1 is the end character we get from the input
+				if((input.read(cbuf)) != -1){
+					// save the input into cbuf
+					input.read(cbuf);
+					// add the input in the arraylist tData
+					tData.add(new TStoredData(
+							Double.parseDouble(
+									String.valueOf(cbuf))));
 					
-					s += "[" + this.location + "]";
+					// Calculate the average of all the temperatures in tData
+					for(int i = 0; i < tData.size(); i++) {
+						double sum = 0;
+						sum += tData.get(i).getTemperature();
+						
+						average = sum/tData.size();
+					}
 					
-					// TODO Proper conversion to bytes before responding
-					output.write(s.getBytes());
+					// Print out the average
+					System.out.println(average);
 					
 					updates++;
 				}
 				
-				// TODO Proper conversion to bytes before responding
-				// Stop loop if MAX_UPDATES is matched
-				if(updates == MAX_UPDATES) {
-					output.write("END".getBytes());
-					break;
-				}
-				
-				// End and close (with finally-block) all resources if client disconnects
-				if(client.isClosed())
+				// If update hits 100 or the client is closed we end the while loop
+				if(updates == 100 || client.isClosed())
 					break;
 			}
+			
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
 		} finally {
