@@ -6,7 +6,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Random;
 
 public class TSensor {
-	TData d;
+	private TData d;
 	
 	// Default values
 	private final double MAX_TEMP	= 24.00; // Maximum init temperature
@@ -47,7 +47,7 @@ public class TSensor {
 	 * Increases or decreases the current temperature within the given factor (default 0.05).
 	 * <p>
 	 * When called, the method will first determine with how much it will 
-	 * increase or decrease with (0.00 to 0.05 as default), this is called newTemp.
+	 * increase or decrease with (0.00 to 0.05 as default), this is called fac.
 	 * Next it will decide whether to increase or decrease.
 	 * <p>
 	 * The formula:
@@ -58,26 +58,27 @@ public class TSensor {
 	 */
 	public void newTemperature() {
 		double curTemp = d.getTemperature();
-		double newTemp;
+		double fac;
 		
 		Random r = new Random();
 		
 		// How many percent should we increase/decrease with?
-		newTemp = d.getFactor() * r.nextDouble();
+		fac = d.getFactor() * r.nextDouble();
 		
 		if(r.nextBoolean())
 			// Increase
-			d.setTemperature(curTemp *  (1 + newTemp));
+			curTemp *= (1 + fac);
 		else
 			// Decrease
-			d.setTemperature(curTemp * (1 - newTemp));
+			curTemp *= (1 - fac);
 		
-		// If temperature is above/below minimum, set to maximum/minimum temperature
+		// If temperature is above/below minimum set to maximum/minimum temperature else calculated temperature
 		if(curTemp > MAX_TEMP)
 			d.setTemperature(MAX_TEMP);
-		
-		if(curTemp < MIN_TEMP)
+		else if(curTemp < MIN_TEMP)
 			d.setTemperature(MIN_TEMP);
+		else
+			d.setTemperature(curTemp);
 	}
 	
 	/**
@@ -124,6 +125,8 @@ public class TSensor {
 		DecimalFormat dFormat = new DecimalFormat(decimals);
 		DecimalFormatSymbols df = new DecimalFormatSymbols();
 		
+		// Forcing "dot" to be decimal separator, as DecimalFormat returns doubles with locale settings
+		// and since Danish separator = comma = not good
 		df.setDecimalSeparator('.');
 		
 		dFormat.setDecimalFormatSymbols(df);
