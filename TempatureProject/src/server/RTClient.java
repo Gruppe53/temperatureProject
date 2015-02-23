@@ -77,6 +77,8 @@ public class RTClient implements Runnable {
 					output.write("END".getBytes());
 					break;
 				}
+				else
+					output.write(String.valueOf(cbuf).getBytes());
 			
 				// If the client is closed break while loop
 				if(client.isClosed())
@@ -84,14 +86,22 @@ public class RTClient implements Runnable {
 			}
 			
 		} catch(IOException e) {
+			System.out.println("-----------------ERROR-----------------");
 			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch(Exception e) {
+			System.out.println("-----------------ERROR-----------------");
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		} finally {
 			try {
 				input.close();
 				output.close();
 				client.close();
 			} catch(IOException e) {
+				System.out.println("-----------------ERROR-----------------");
 				System.out.println(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 	}

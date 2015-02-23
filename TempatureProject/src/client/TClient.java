@@ -1,8 +1,10 @@
 package client;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.Executors;
@@ -12,12 +14,12 @@ import java.util.concurrent.TimeUnit;
 public class TClient {
 	private TSensor sensor;
 	private Socket client;
-	private DataInputStream input;
+	private BufferedReader input;
 	private DataOutputStream output;
 	
 	// Default values
-	private final String SERVER_HOST = "localhost"; // TODO Change to localhost
-	private final int SERVER_PORT = 17003;
+	private final String SERVER_HOST = "localhost";
+	private final int SERVER_PORT = 17056;
 	private final int UPDATE_INTERVAL = 5000;
 	private final TimeUnit UPDATE_UNIT = TimeUnit.MILLISECONDS;
 	
@@ -31,7 +33,7 @@ public class TClient {
 			// Create client and I/O objects
 			client = new Socket(this.SERVER_HOST, this.SERVER_PORT);
 			output = new DataOutputStream(client.getOutputStream());
-			input = new DataInputStream(client.getInputStream());
+			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			
 			// If client and I/O objects are created...
 			if(client != null && output != null && input != null) {
@@ -53,7 +55,13 @@ public class TClient {
 								output.write(sensor.getTemperatureAsByte());
 								System.out.println("New temperature sent to server.");
 							} catch (IOException e) {
+								System.out.println("-----------------ERROR-----------------");
 								System.out.println(e.getMessage());
+								e.printStackTrace();
+							} catch(Exception e) {
+								System.out.println("-----------------ERROR-----------------");
+								System.out.println(e.getMessage());
+								e.printStackTrace();
 							}
 						}
 					},					// Runnable block-end
@@ -63,14 +71,19 @@ public class TClient {
 				
 				// Print response
 				String res;
-				while((res = input.readUTF()) != null) {
-					System.out.println("Server: " + res);
+				
+				while(true) {
+					res = input.readLine();
 					
 					// If "END" is recieved, stop printing AND stop executor
 					// Not working
-					if(res.indexOf("END") != -1) {
-						exe.shutdown();
-						break;
+					if(res != null) {
+						System.out.println("Server: " + res);
+						
+						if(res.indexOf("END") != -1) {
+							exe.shutdown();
+							break;
+						}
 					}
 				}
 				
@@ -78,9 +91,17 @@ public class TClient {
 				exe.shutdownNow();
 			}
 		} catch (UnknownHostException e) {
-			System.out.println("Host not recognized.");
+			System.out.println("-----------------ERROR-----------------");
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("IO Exception.");
+			System.out.println("-----------------ERROR-----------------");
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch(Exception e) {
+			System.out.println("-----------------ERROR-----------------");
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		} finally {
 			try {
 				// Close resources
@@ -90,7 +111,13 @@ public class TClient {
 				
 				System.out.println("Connection closed.");
 			} catch (IOException e) {
+				System.out.println("-----------------ERROR-----------------");
 				System.out.println(e.getMessage());
+				e.printStackTrace();
+			} catch(Exception e) {
+				System.out.println("-----------------ERROR-----------------");
+				System.out.println(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 	}

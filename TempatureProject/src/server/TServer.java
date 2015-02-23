@@ -9,10 +9,9 @@ public class TServer implements Runnable {
 	protected ServerSocket server;
 	
 	// Default values
-	private final int SERVER_PORT = 17003;
+	private final int SERVER_PORT = 17056;
 	
 	public TServer() {
-		System.out.println("Waiting for clients...\n");
 	}
 
 	@Override
@@ -34,7 +33,13 @@ public class TServer implements Runnable {
 				
 				System.out.println("Client [" + client.getLocalSocketAddress() + "] connected");
 			} catch (IOException e) {
+				System.out.println("-----------------ERROR-----------------");
 				System.out.println(e.getMessage());
+				e.printStackTrace();
+			} catch(Exception e) {
+				System.out.println("-----------------ERROR-----------------");
+				System.out.println(e.getMessage());
+				e.printStackTrace();
 			} finally {
 				// When client is connected add as new thread
 				new Thread(
@@ -47,9 +52,16 @@ public class TServer implements Runnable {
 	
 	private void startServer() {
 		try {
-			this.server = new ServerSocket(this.SERVER_PORT);
+			if((this.server = new ServerSocket(this.SERVER_PORT)) != null)
+				System.out.println("Waiting for clients...\n");
 		} catch(IOException e) {
+			System.out.println("-----------------ERROR-----------------");
 			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch(Exception e) {
+			System.out.println("-----------------ERROR-----------------");
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
