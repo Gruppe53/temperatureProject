@@ -80,7 +80,7 @@ public class RTClient implements Runnable {
 						}
 						
 						// Print the new average and room location/description
-						System.out.println(average + " [" + location + "]");
+						System.out.println(average + " [" + this.location + "]");
 					}
 
 					// If update hits 100 break while loop
