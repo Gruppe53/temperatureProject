@@ -66,8 +66,6 @@ public class RTClient implements Runnable {
 						try {
 							double temperature = Double.parseDouble(temperatureStr);
 							
-							System.out.println(temperature);
-							
 							// Add temperature to tData for later average calculation
 							tData.add(new TStoredData(temperature));
 							
@@ -82,7 +80,7 @@ public class RTClient implements Runnable {
 						}
 						
 						// Print the new average and room location/description
-						System.out.println(average + " [" + this.location + "]");
+						System.out.println("[" + this.location + "] " + average);
 					}
 
 					// If update hits 100 break while loop
@@ -99,12 +97,9 @@ public class RTClient implements Runnable {
 			}
 
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			System.out.println(e.getMessage() + " [" + client.getLocalAddress() + "]");
 		} catch (Exception e) {
-
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			System.out.println(e.getMessage() + " [" + client.getLocalAddress() + "]");
 		} finally {
 			try {
 				input.close();

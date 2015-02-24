@@ -17,7 +17,7 @@ public class TClient {
 	private DataOutputStream output;
 
 	// Default values
-	private final String SERVER_HOST			= "10.16.152.21"; // TODO "localhost"
+	private final String SERVER_HOST			= "localhost";
 	private final int SERVER_PORT				= 17056; // Which port should we connect through
 	private final TimeUnit UPDATE_UNIT			= TimeUnit.MILLISECONDS; // What time unit should we use
 	private final int UPDATE_INTERVAL			= 5000; // With which interval should we update the temperature
