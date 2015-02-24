@@ -34,14 +34,13 @@ public class TClient {
 			// Create client and I/O objects
 			client = new Socket(this.SERVER_HOST, this.SERVER_PORT);
 			output = new DataOutputStream(client.getOutputStream());
-			input = new BufferedReader(new InputStreamReader(
-					client.getInputStream()));
+			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
 			// If client and I/O objects are created...
 			if (client != null && output != null && input != null) {
 				// Send the room location/description
 				try {
-					output.writeBytes(LOCATION_DESCRIPTION);
+					output.writeBytes(LOCATION_DESCRIPTION + "\r");
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -64,7 +63,7 @@ public class TClient {
 								System.out.println("Changed the temperature: " + sensor.getTemperatureAsDouble(2));
 	
 								// Output new temperature to server as bytes
-								output.writeBytes(String.valueOf(sensor.getTemperatureAsDouble(2)));
+								output.writeBytes(String.valueOf(sensor.getTemperatureAsDouble(2)) + "\r");
 								;
 								System.out.println("New temperature sent to server.");
 							} catch (IOException e) {

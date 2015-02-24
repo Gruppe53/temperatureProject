@@ -66,6 +66,8 @@ public class RTClient implements Runnable {
 						try {
 							double temperature = Double.parseDouble(temperatureStr);
 							
+							System.out.println(temperature);
+							
 							// Add temperature to tData for later average calculation
 							tData.add(new TStoredData(temperature));
 							
@@ -117,12 +119,11 @@ public class RTClient implements Runnable {
 
 	private void calculateAverage() {
 		// Calculate average temperature stored in tData
-		for (int i = 0; i < tData.size(); i++) {
-			double sum = 0;
-
-			sum += tData.get(i).getTemperature();
-
-			average = sum / tData.size();
-		}
+		double sum = 0;
+		
+		for(TStoredData t : tData)
+			sum += t.getTemperature();
+		
+		average = sum / tData.size();
 	}
 }
