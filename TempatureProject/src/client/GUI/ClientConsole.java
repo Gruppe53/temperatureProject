@@ -57,8 +57,4 @@ public class ClientConsole extends JPanel {
 		add(degsLabel);
 		add(tempLabel);
 	}
-	
-	public void paintConsole(Graphics g) {
-		tempLabel.setText(tempLabel.getText());
-	}
 }

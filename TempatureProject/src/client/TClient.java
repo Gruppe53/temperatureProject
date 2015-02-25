@@ -10,6 +10,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import client.GUI.ClientGUI;
+
 public class TClient {
 	private TSensor sensor;
 	private Socket client;
@@ -22,9 +24,14 @@ public class TClient {
 	private final TimeUnit UPDATE_UNIT			= TimeUnit.MILLISECONDS; // What time unit should we use
 	private final int UPDATE_INTERVAL			= 5000; // With which interval should we update the temperature
 	private final int START_TIME				= 5000; // Delay the client from sending data to the server (cosmetic reasons only)
-	private final String LOCATION_DESCRIPTION	= "My location/description"; // This should be determined by CLI
+	private final String LOCATION_DESCRIPTION	= "Test room 1"; // This should be determined by CLI
 
 	public TClient() {
+		// Test
+//		ClientGUI gui = new ClientGUI();
+//		
+//		gui.createAndShowGUI(LOCATION_DESCRIPTION);
+		
 		// Create sensor
 		sensor = new TSensor();
 

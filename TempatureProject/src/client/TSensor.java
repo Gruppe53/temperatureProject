@@ -3,6 +3,8 @@ package client;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Random;
 
 public class TSensor {
@@ -38,10 +40,7 @@ public class TSensor {
 	 *             if the given temperature or factor is above or below the
 	 *             acceptable range.
 	 */
-	public TSensor(int temperature, double factor)
-			throws IllegalArgumentException {
-		// Specify initial data values
-
+	public TSensor(double temperature, double factor) throws IllegalArgumentException {
 		// Check that temperature is within acceptable range
 		if (temperature >= MIN_TEMP && temperature <= MAX_TEMP)
 			// Check that factor is within acceptable range
@@ -49,11 +48,9 @@ public class TSensor {
 				// Create TData with parameter values
 				d = new TData(temperature, factor);
 			else
-				throw new IllegalArgumentException(
-						"Factor is not within acceptable range (" + MIN_FAC + "-" + MAX_FAC + ")");
+				throw new IllegalArgumentException("Factor is not within acceptable range (" + MIN_FAC + "-" + MAX_FAC + ")");
 		else
-			throw new IllegalArgumentException(
-					"The initial temperature value is not within acceptable range (" + MIN_TEMP + "-" + MAX_TEMP + ")");
+			throw new IllegalArgumentException("The initial temperature value is not within acceptable range (" + MIN_TEMP + "-" + MAX_TEMP + ")");
 	}
 
 	/**
@@ -134,6 +131,11 @@ public class TSensor {
 	public double getTemperatureAsDouble(int digits) {
 		// TODO Instead of DecimalFormatSymbols.setDecimalSeparator, find a
 		// solution where we force a specific locale to be used.
+		// E.g.
+		// NumberFormat dFormat = NumberFormat.getInstance(Locale.US)
+		// dFormat = new DecimalFormat(decimals)
+		// - Might work?
+		
 		String decimals = "#.";
 
 		for (; digits != 0; digits--)
@@ -144,10 +146,12 @@ public class TSensor {
 
 		// Forcing "dot" to be decimal separator, as DecimalFormat returns
 		// doubles with locale settings and since Danish separator = comma = not good
+		// Also, no grouping (just to be sure that no comma grouping occurs)
 		df.setDecimalSeparator('.');
 
 		dFormat.setDecimalFormatSymbols(df);
-
+		dFormat.setGroupingUsed(false);
+		
 		return new Double(dFormat.format(getTemperatureAsDouble()));
 	}
 }
