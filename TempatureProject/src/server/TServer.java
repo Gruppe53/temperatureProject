@@ -25,13 +25,13 @@ public class TServer implements Runnable {
 		}
 
 		// Start server
-		if (startServer()) {
+		if (this.startServer()) {
 			while (true) {
 				// Wait for client to connect
 				Socket client = null;
 
 				try {
-					client = server.accept();
+					client = this.server.accept();
 
 					System.out.println("Client [" + client.getLocalSocketAddress() + "] connected");
 				} catch (IOException e) {
@@ -43,8 +43,6 @@ public class TServer implements Runnable {
 				} finally {
 					// When client is connected add as new thread
 					new Thread(
-						// TODO Find a way to replace "Unknown" with room
-						// location/description - should be received from client
 						new RTClient(client, "Unknown")
 					).start();
 				}
