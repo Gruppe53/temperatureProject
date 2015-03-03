@@ -71,7 +71,6 @@ public class TClient {
 	
 								// Output new temperature to server as bytes
 								output.writeBytes(String.valueOf(sensor.getTemperatureAsDouble(2)) + "\r");
-								;
 								System.out.println("New temperature sent to server.");
 							} catch (IOException e) {
 								System.out.println(e.getMessage());
@@ -91,7 +90,7 @@ public class TClient {
 					String res = null;
 					
 					// If "END" is received, stop printing AND stop executor
-					// Not working
+					// TODO Not working....
 					if ((res = input.readLine()) != null) {
 						System.out.println("Server: " + res);
 

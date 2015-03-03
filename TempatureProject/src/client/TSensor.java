@@ -98,8 +98,7 @@ public class TSensor {
 	 * @return the temperature as a byte-array.
 	 */
 	public byte[] getTemperatureAsByte() {
-		// Create new byte array (double = 8 bytes as JVM is platform
-		// independent)
+		// Create new byte array (double = 8 bytes as JVM is platform independent)
 		byte[] b = new byte[8];
 
 		// Wrap bytes from double in b byte array

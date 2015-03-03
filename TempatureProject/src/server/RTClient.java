@@ -48,33 +48,33 @@ public class RTClient implements Runnable {
 	public void run() {
 		try {
 			// Create IO objects
-			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			output = new DataOutputStream(client.getOutputStream());
+			this.input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			this.output = new DataOutputStream(client.getOutputStream());
 
-			if (input != null && output != null) {
+			if (this.input != null && this.output != null) {
 				// First line received should be the room location/description
 				String location;
-				if((location = input.readLine()) != null)
+				if((location = this.input.readLine()) != null)
 					this.location = location;
 
 				while (true) {
 					String temperatureStr = null;
 
 					// If something has been read
-					if ((temperatureStr = input.readLine()) != null) {
+					if ((temperatureStr = this.input.readLine()) != null) {
 						// Check if input can be parsed as a double
 						try {
 							double temperature = Double.parseDouble(temperatureStr);
 							
 							// Add temperature to tData for later average calculation
-							tData.add(new TStoredData(temperature));
+							this.tData.add(new TStoredData(temperature));
 							
 							// Calculate the new average
-							calculateAverage();
+							this.calculateAverage();
 							
 							// For testing purposes we keep track of a counter which
 							// will automatically end the test if updates reach a maximum
-							updates++;
+							this.updates++;
 						} catch(NumberFormatException e) {
 							System.out.println("Received something else than a double [error: " + e.getMessage() + "].");
 						}
@@ -84,27 +84,27 @@ public class RTClient implements Runnable {
 					}
 
 					// If update hits 100 break while loop
-					if (updates == MAX_UPDATES) {
-						output.writeBytes("END");
+					if (this.updates == this.MAX_UPDATES) {
+						this.output.writeBytes("END");
 						break;
 					} else
-						output.writeBytes(temperatureStr);
+						this.output.writeBytes(temperatureStr);
 
 					// If the client is closed break while loop
-					if (client.isClosed())
+					if (this.client.isClosed())
 						break;
 				}
 			}
 
 		} catch (IOException e) {
-			System.out.println(e.getMessage() + " [" + client.getLocalAddress() + "]");
+			System.out.println(e.getMessage() + " [" + this.client.getLocalAddress() + "]");
 		} catch (Exception e) {
-			System.out.println(e.getMessage() + " [" + client.getLocalAddress() + "]");
+			System.out.println(e.getMessage() + " [" + this.client.getLocalAddress() + "]");
 		} finally {
 			try {
-				input.close();
-				output.close();
-				client.close();
+				this.input.close();
+				this.output.close();
+				this.client.close();
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();
@@ -116,9 +116,9 @@ public class RTClient implements Runnable {
 		// Calculate average temperature stored in tData
 		double sum = 0;
 		
-		for(TStoredData t : tData)
+		for(TStoredData t : this.tData)
 			sum += t.getTemperature();
 		
-		average = sum / tData.size();
+		this.average = sum / this.tData.size();
 	}
 }
