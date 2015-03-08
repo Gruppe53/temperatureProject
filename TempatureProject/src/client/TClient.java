@@ -36,10 +36,11 @@ public class TClient {
 		// Create RMI (maybe it needs to be done in its own thread, note how stream has been implemented)
 		
 		// Read input from human
-		int option = 0;
-		
 		// Create an input scanner
 		Scanner scanner = new Scanner(System.in);
+		
+		// Keep track of option chosen
+		int option = 0;
 		
 		// Cosmetic so that the human knows what he/she can do
 		System.out.println("Options:");
