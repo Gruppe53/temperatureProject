@@ -50,27 +50,43 @@ public class RTClient implements Runnable {
 			// Create IO objects
 			this.input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			this.output = new DataOutputStream(client.getOutputStream());
-
+			
+		
 			if (this.input != null && this.output != null) {
 				// First line received should be the room location/description
 				String location;
 				if((location = this.input.readLine()) != null)
 					this.location = location;
 
+				
 				while (true) {
 					String temperatureStr = null;
-
 					// If something has been read
 					if ((temperatureStr = this.input.readLine()) != null) {
 						// Check if input can be parsed as a double
+						
+					if(temperatureStr.length() > 4){
+						temperatureStr = this.input.readLine().substring(2);
+					}
 						try {
 							double temperature = Double.parseDouble(temperatureStr);
 							
 							// Add temperature to tData for later average calculation
 							this.tData.add(new TStoredData(temperature));
 							
+							System.out.println(input.readLine());
+							
 							// Calculate the new average
 							this.calculateAverage();
+							
+							if(input.readLine().substring(1, 2).equals("p")){
+								try {
+									System.out.println("Average send to client");
+									output.writeDouble(average);
+								} catch (IOException e) {
+									System.out.println(e.getMessage());
+								}
+							}
 							
 							// For testing purposes we keep track of a counter which
 							// will automatically end the test if updates reach a maximum
@@ -95,6 +111,8 @@ public class RTClient implements Runnable {
 						break;
 				}
 			}
+		
+
 
 		} catch (IOException e) {
 			System.out.println(e.getMessage() + " [" + this.client.getLocalAddress() + "]");

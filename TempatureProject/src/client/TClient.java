@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -31,17 +32,21 @@ public class TClient {
 //		ClientGUI gui = new ClientGUI();
 //		
 //		gui.createAndShowGUI(LOCATION_DESCRIPTION);
+
 		
 		// Create sensor
 		sensor = new TSensor();
+		
+		
 
 		System.out.println("Sensor initialized with temperature: " + sensor.getTemperatureAsDouble(2));
-
+	
 		try {
 			// Create client and I/O objects
 			client = new Socket(this.SERVER_HOST, this.SERVER_PORT);
 			output = new DataOutputStream(client.getOutputStream());
 			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			
 
 			// If client and I/O objects are created...
 			if (client != null && output != null && input != null) {
@@ -63,7 +68,11 @@ public class TClient {
 				exe.scheduleAtFixedRate(new Runnable() {
 						// What should be done every update interval
 						@Override
-						public void run() {
+						public void run() {	
+							Scanner scan = new Scanner(System.in);
+							String printAverage = null;
+							double average;
+							
 							try {
 								// Set new temperature
 								sensor.newTemperature();
@@ -72,6 +81,25 @@ public class TClient {
 								// Output new temperature to server as bytes
 								output.writeBytes(String.valueOf(sensor.getTemperatureAsDouble(2)) + "\r");
 								System.out.println("New temperature sent to server.");
+								
+								
+								
+								// Write to server, to get average
+								System.out.println("To see average press p: ");
+								printAverage = scan.nextLine();
+								if(printAverage.equals("p")){
+									try {
+										output.writeChars("p");
+										System.out.println("hejsa 1");
+										average = Double.parseDouble(input.readLine());
+										System.out.println("hejsa 2");
+										System.out.println("Average = " + average);
+									} catch (IOException e) {
+										System.out.println(e.getMessage());
+									}
+								}
+							
+								
 							} catch (IOException e) {
 								System.out.println(e.getMessage());
 								e.printStackTrace();
