@@ -1,140 +1,107 @@
 package client;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Scanner;
 
 import client.GUI.ClientGUI;
 
 public class TClient {
 	private TSensor sensor;
-	private Socket client;
-	private BufferedReader input;
-	private DataOutputStream output;
+	protected Thread thread = null;
 
 	// Default values
-	private final String SERVER_HOST			= "localhost";
-	private final int SERVER_PORT				= 17056; // Which port should we connect through
-	private final TimeUnit UPDATE_UNIT			= TimeUnit.MILLISECONDS; // What time unit should we use
-	private final int UPDATE_INTERVAL			= 5000; // With which interval should we update the temperature
-	private final int START_TIME				= 5000; // Delay the client from sending data to the server (cosmetic reasons only)
 	private final String LOCATION_DESCRIPTION	= "Test room 1"; // This should be determined by CLI
 
 	public TClient() {
-		// Test
-//		ClientGUI gui = new ClientGUI();
-//		
-//		gui.createAndShowGUI(LOCATION_DESCRIPTION);
-
+		// Create GUI
+		//ClientGUI gui = new ClientGUI();
+		//gui.createAndShowGUI(LOCATION_DESCRIPTION);
+		
+		// For now, GUI isn't necessary (isn't completed anyway...)
 		
 		// Create sensor
 		sensor = new TSensor();
-		
-		
-
 		System.out.println("Sensor initialized with temperature: " + sensor.getTemperatureAsDouble(2));
-	
-		try {
-			// Create client and I/O objects
-			client = new Socket(this.SERVER_HOST, this.SERVER_PORT);
-			output = new DataOutputStream(client.getOutputStream());
-			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			
-
-			// If client and I/O objects are created...
-			if (client != null && output != null && input != null) {
-				// Send the room location/description
-				try {
-					output.writeBytes(LOCATION_DESCRIPTION + "\r");
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				// Create a scheduled executor service so we can keep sending
-				// new data to the server with a specific interval
-				ScheduledExecutorService exe = Executors.newSingleThreadScheduledExecutor();
-
-				// TODO Find a way to close executor if socket is closed
-				// Define executor service
-				exe.scheduleAtFixedRate(new Runnable() {
-						// What should be done every update interval
-						@Override
-						public void run() {	
-							try {
-								// Set new temperature
-								sensor.newTemperature();
-								System.out.println("Changed the temperature: " + sensor.getTemperatureAsDouble(2));
-	
-								// Output new temperature to server as bytes
-								output.writeBytes(String.valueOf(sensor.getTemperatureAsDouble(2)) + "\r");
-								System.out.println("New temperature sent to server.");
-							
-								
-							} catch (IOException e) {
-								System.out.println(e.getMessage());
-								e.printStackTrace();
-							} catch (Exception e) {
-								System.out.println(e.getMessage());
-								e.printStackTrace();
-							}
-						}
-					},					// Runnable block-end
-				this.START_TIME,		// Start immediately
-				this.UPDATE_INTERVAL,	// The update interval (by default 5000)
-				this.UPDATE_UNIT);		// Defines the UPDATE_INTERVAL unit (by default milliseconds)
-
-				// Print response
-				while (true) {
-					String res = null;
-					
-					// If "END" is received, stop printing AND stop executor
-					// TODO Not working....
-					if ((res = input.readLine()) != null) {
-						System.out.println("Server: " + res);
-
-						if (res.indexOf("END") != -1) {
-							exe.shutdown();
-							break;
-						}
-					}
-				}
-
-				// If we end up here executor should be shut down, if not already
-				exe.shutdownNow();
-			}
-		} catch (UnknownHostException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		} finally {
-			try {
-				// Close resources
-				input.close();
-				output.close();
-				client.close();
-
-				System.out.println("Connection closed.");
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
-			}
+		
+		// Syncing thread...
+		synchronized(this) {
+			this.thread = Thread.currentThread();
 		}
+		
+		// Create stream
+		new Thread(
+			new TClientSCon(sensor, LOCATION_DESCRIPTION)
+		).start();
+		
+		// TODO
+		// Create RMI (maybe it needs to be done in its own thread, note how stream has been implemented)
+		
+		// Read input from human
+		int option = 0;
+		
+		// Create an input scanner
+		Scanner scanner = new Scanner(System.in);
+		
+		// Cosmetic so that the human knows what he/she can do
+		System.out.println("Options:");
+		System.out.println("1. Get average (RMI)");
+		System.out.println("2. Stop client");
+		System.out.println("3. This message...");
+		System.out.print("Choose option: ");
+		
+		// Keep scanner active until we choose option 2 which stops the client
+		while(true) {
+			// What we should do depending on input (use cases and NOT if-statements)
+			switch(option = scanner.nextInt()) {
+				case 1:
+					// TODO (important to implement)
+					// 1. Call getAverage on RMI object
+					// 2. Print the average
+					
+					// Test
+					System.out.println("Chose: " + option);
+					
+					// Prepare next line to be read
+					scanner.nextLine();
+					break;
+				case 2:
+					// TODO (optional...)
+					// Stop the client
+					
+					// Test
+					System.out.println("Chose: " + option);
+					
+					// For now, make sure next line is prepared
+					scanner.nextLine();
+					break;
+				case 3:
+					// Print options menu
+					System.out.println();
+					System.out.println("Options:");
+					System.out.println("1. Get average (RMI)");
+					System.out.println("2. Stop client");
+					System.out.println("3. This message...");
+					break;
+				default:
+					// If chosen input isn't acknowledged ask human to try again
+					System.out.println();
+					System.out.println("Wrong input, please try again.");
+					
+					// Prepare next line to be read
+					scanner.nextLine();
+					break;
+			}
+			
+			// If we choose option 2 break while loop and end client...
+			if(option == 2)
+				break;
+			
+			// Cosmetic...
+			System.out.print("Choose option: ");
+		}
+		
+		System.out.println("Exiting...");
+		
+		scanner.close();
 	}
 
 	// Start the client...

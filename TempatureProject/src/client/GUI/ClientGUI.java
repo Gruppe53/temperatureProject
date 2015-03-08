@@ -13,19 +13,30 @@ public final class ClientGUI extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static JFrame f;
 	private static JComponent c;
+	private ClientConsole con = new ClientConsole();
 	
-	public static ClientGUI getInstance() {
-		if()
-	}
-	
-	private ClientGUI() {
+	/**
+	 * @author Kristin
+	 * 
+	 * Class constructor for GUI. Will instantiate necessary panels<br>
+	 * and holds all necessary methods to update these.
+	 */
+	public ClientGUI() {
 		// Set layout manager
-		setLayout(new MigLayout());
-		setPreferredSize(new Dimension(540,68));
+		this.setLayout(new MigLayout());
+		this.setPreferredSize(new Dimension(540,68));
 		
-		add(ClientConsole.getInstance());
+		this.setOpaque(true);
+		
+		this.add(con);
 	}
 	
+	/**
+	 * When GUI has been instantiated ClientGUI.createAndShowGUI<br>
+	 * can be used to draw the window.
+	 * 
+	 * @param name name of the JFrame window
+	 */
 	public void createAndShowGUI(String name) {
         // Create window
 		f = new JFrame(name);
@@ -44,4 +55,13 @@ public final class ClientGUI extends JPanel {
         f.pack();
         f.setVisible(true);
     }
+	
+	/**
+	 * Will update the temperature label.
+	 * 
+	 * @param temperature the new temperature
+	 */
+	public void updateTemperature(String temperature) {
+		con.updateTemperature(temperature);
+	}
 }

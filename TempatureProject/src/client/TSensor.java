@@ -3,8 +3,6 @@ package client;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.Random;
 
 public class TSensor {
@@ -26,18 +24,16 @@ public class TSensor {
 	}
 
 	/**
-	 * Class constructor that allows parameters to set the initial temperature
-	 * and the factor. The temperature argument has to be within the acceptable
-	 * range (14-21). The factor argument has to be within the acceptable range
-	 * (0.01 - 0.1).
+	 * Class constructor that allows parameters to set the initial temperature and the factor.<br>
+	 * The temperature argument has to be within the acceptable range (14-21).<br>
+	 * The factor argument has to be within the acceptable range (0.01 - 0.1).
 	 * 
-	 * @param temperature
-	 *            the initial temperature value.
+	 * @param temperature the initial temperature value.
 	 * @param factor
 	 *            the factor which is used to determine the maximum increase or
 	 *            decrease of the temperature.
 	 * @throws IllegalArgumentException
-	 *             if the given temperature or factor is above or below the
+	 *             is thrown if the given temperature or factor is above or below the
 	 *             acceptable range.
 	 */
 	public TSensor(double temperature, double factor) throws IllegalArgumentException {
@@ -54,16 +50,15 @@ public class TSensor {
 	}
 
 	/**
-	 * Increases or decreases the current temperature within the given factor
-	 * (default 0.05).
+	 * Increases or decreases the current temperature within the given factor (default 0.05).
 	 * <p>
-	 * When called, the method will first determine with how much it will
-	 * increase or decrease with (0.00 to 0.05 as default), this is called fac.
+	 * When called, the method will first determine with how much it will<br>
+	 * increase or decrease with (0.00 to 0.05 as default), this is called fac.<br>
 	 * Next it will decide whether to increase or decrease.
 	 * <p>
 	 * The formula: Current temperature * (1 (+ OR -) fac).
 	 * <p>
-	 * If the new temperature is above or below the acceptable range (14-24) it
+	 * If the new temperature is above or below the acceptable range (14-24) it<br>
 	 * will either set the temperature to 24 or 14, respectively.
 	 */
 	public void newTemperature() {
@@ -108,9 +103,9 @@ public class TSensor {
 	}
 
 	/**
-	 * Will return the current temperature as a double. It will include all
-	 * decimals. An integer argument can be given to decide the amount of
-	 * decimals.
+	 * Will return the current temperature as a double.<br>
+	 * It will include all decimals. An integer argument<br>
+	 * can be given to decide the amount of decimals - {@link #getTemperatureAsDouble(int) getTemperatureAsDouble(int)}.
 	 * 
 	 * @return the current temperature.
 	 */
@@ -121,7 +116,7 @@ public class TSensor {
 	/**
 	 * Formats the current temperature with a given amount of decimals.
 	 * <p>
-	 * The format will drop any trailing zeros. E.g. digits = 2, temperature has
+	 * The format will drop any trailing zeros. E.g. digits = 2, temperature has<br>
 	 * been read to 21.90, will be returned as 21.9.
 	 * 
 	 * @param digits the amount of desired decimals.
@@ -152,5 +147,17 @@ public class TSensor {
 		dFormat.setGroupingUsed(false);
 		
 		return new Double(dFormat.format(getTemperatureAsDouble()));
+	}
+	
+	/**
+	 * Will return the current temperature as a string. The parameter digits<br>
+	 * decides how many decimals the returned temperature should hold.<br>
+	 * This method uses the {@link #getTemperatureAsDouble(int) getTemperatureAsDouble} method to format the output.
+	 * 
+	 * @param digits the amount of desired decimals.
+	 * @return
+	 */
+	public String getTemperatureAsString(int digits) {
+		return String.valueOf(getTemperatureAsDouble(digits));
 	}
 }

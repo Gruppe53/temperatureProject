@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class TServer implements Runnable {
-	protected Thread thread = null;
+	protected Thread thread;
 	protected ServerSocket server;
 
 	// Default values
@@ -53,11 +53,10 @@ public class TServer implements Runnable {
 
 	private boolean startServer() {
 		try {
-			if ((this.server = new ServerSocket(this.SERVER_PORT)) != null) {
+			if ((this.server = new ServerSocket(this.SERVER_PORT)) != null)
 				System.out.println("Waiting for clients...\n");
-
-				return true;
-			}
+			
+			return true;
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

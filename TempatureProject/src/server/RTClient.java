@@ -57,24 +57,18 @@ public class RTClient implements Runnable {
 				String location;
 				if((location = this.input.readLine()) != null)
 					this.location = location;
-
 				
 				while (true) {
 					String temperatureStr = null;
+					
 					// If something has been read
 					if ((temperatureStr = this.input.readLine()) != null) {
 						// Check if input can be parsed as a double
-						
-					if(temperatureStr.length() > 4){
-						temperatureStr = this.input.readLine().substring(2);
-					}
 						try {
 							double temperature = Double.parseDouble(temperatureStr);
 							
 							// Add temperature to tData for later average calculation
 							this.tData.add(new TStoredData(temperature));
-							
-							System.out.println(input.readLine());
 							
 							// Calculate the new average
 							this.calculateAverage();
@@ -82,12 +76,15 @@ public class RTClient implements Runnable {
 							// For testing purposes we keep track of a counter which
 							// will automatically end the test if updates reach a maximum
 							this.updates++;
+							
+							// Print the received temperature
+							System.out.println("[" + this.location + "] Received new temperature: " + temperatureStr);
 						} catch(NumberFormatException e) {
-							System.out.println("Received something else than a double [error: " + e.getMessage() + "].");
+							System.out.println("[" + this.location + "] Received something else than a double [error: " + e.getMessage() + "].");
 						}
 						
 						// Print the new average and room location/description
-						System.out.println("[" + this.location + "] " + average);
+						System.out.println("[" + this.location + "] New average: " + average);
 					}
 
 					// If update hits 100 break while loop
