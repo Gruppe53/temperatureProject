@@ -79,15 +79,6 @@ public class RTClient implements Runnable {
 							// Calculate the new average
 							this.calculateAverage();
 							
-							if(input.readLine().substring(1, 2).equals("p")){
-								try {
-									System.out.println("Average send to client");
-									output.writeDouble(average);
-								} catch (IOException e) {
-									System.out.println(e.getMessage());
-								}
-							}
-							
 							// For testing purposes we keep track of a counter which
 							// will automatically end the test if updates reach a maximum
 							this.updates++;

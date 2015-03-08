@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -69,10 +68,6 @@ public class TClient {
 						// What should be done every update interval
 						@Override
 						public void run() {	
-							Scanner scan = new Scanner(System.in);
-							String printAverage = null;
-							double average;
-							
 							try {
 								// Set new temperature
 								sensor.newTemperature();
@@ -81,23 +76,6 @@ public class TClient {
 								// Output new temperature to server as bytes
 								output.writeBytes(String.valueOf(sensor.getTemperatureAsDouble(2)) + "\r");
 								System.out.println("New temperature sent to server.");
-								
-								
-								
-								// Write to server, to get average
-								System.out.println("To see average press p: ");
-								printAverage = scan.nextLine();
-								if(printAverage.equals("p")){
-									try {
-										output.writeChars("p");
-										System.out.println("hejsa 1");
-										average = Double.parseDouble(input.readLine());
-										System.out.println("hejsa 2");
-										System.out.println("Average = " + average);
-									} catch (IOException e) {
-										System.out.println(e.getMessage());
-									}
-								}
 							
 								
 							} catch (IOException e) {
