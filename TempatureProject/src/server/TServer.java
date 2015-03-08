@@ -3,13 +3,18 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class TServer implements Runnable {
 	protected Thread thread;
 	protected ServerSocket server;
 
 	// Default values
-	private final int SERVER_PORT = 17056;
+	private final int SERVER_PORT	= 17056;
+	private final int RMI_PORT 		= (SERVER_PORT + 1);
 	
 	/**
 	 * Empty class constructor.
@@ -42,9 +47,25 @@ public class TServer implements Runnable {
 					e.printStackTrace();
 				} finally {
 					// When client is connected add as new thread
-					new Thread(
-						new RTClient(client, "Unknown")
-					).start();
+					try {
+						RTClient rtc;
+						
+						// Start a running temperature client
+						new Thread(
+							rtc = new RTClient(client, "Unknown")
+						).start();
+						
+						// Create registry and bind object
+						Registry reg = LocateRegistry.createRegistry(RMI_PORT);
+						reg.bind(rtc.getLocation(), rtc);
+						System.out.println("Bound " + rtc.getLocation() + " to list");
+					} catch (RemoteException e) {
+						System.out.println(e.getMessage());
+						e.printStackTrace();
+					} catch (AlreadyBoundException e) {
+						System.out.println(e.getMessage());
+						e.printStackTrace();
+					}
 				}
 			}
 		} else

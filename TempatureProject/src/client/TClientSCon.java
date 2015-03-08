@@ -16,24 +16,26 @@ public class TClientSCon implements Runnable {
 	private DataOutputStream output;
 	private TSensor sensor;
 	private String location;
+	private String serverHost;
+	private int serverPort;
 
 	// Default values
-	private final String SERVER_HOST			= "localhost";
-	private final int SERVER_PORT				= 17056; // Which port should we connect through
 	private final TimeUnit UPDATE_UNIT			= TimeUnit.MILLISECONDS; // What time unit should we use
 	private final int UPDATE_INTERVAL			= 5000; // With which interval should we update the temperature
 	private final int START_TIME				= 5000; // Delay the client from sending data to the server (cosmetic reasons only)
 	
-	public TClientSCon(TSensor sensor, String location) {
+	public TClientSCon(TSensor sensor, String location, String serverHost, int serverPort) {
 		this.sensor = sensor;
 		this.location = location;
+		this.serverHost = serverHost;
+		this.serverPort = serverPort;
 	}
 
 	@Override
 	public void run() {
 		try {
 			// Create client and I/O objects
-			this.client = new Socket(this.SERVER_HOST, this.SERVER_PORT);
+			this.client = new Socket(this.serverHost, this.serverPort);
 			this.output = new DataOutputStream(client.getOutputStream());
 			this.input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			

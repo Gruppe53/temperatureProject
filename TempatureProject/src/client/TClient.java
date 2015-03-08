@@ -1,15 +1,21 @@
 package client;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 import client.GUI.ClientGUI;
 
 public class TClient {
 	private TSensor sensor;
+	private TClientRMI rmi;
 	protected Thread thread = null;
 
 	// Default values
 	private final String LOCATION_DESCRIPTION	= "Test room 1"; // This should be determined by CLI
+	private final String SERVER_HOST			= "localhost"; // Server address
+	private final int SERVER_PORT				= 17056; // Which port should we connect through
+	private final int RMI_PORT					= (SERVER_PORT + 1);
 
 	public TClient() {
 		// Create GUI
@@ -29,11 +35,19 @@ public class TClient {
 		
 		// Create stream
 		new Thread(
-			new TClientSCon(sensor, LOCATION_DESCRIPTION)
+			new TClientSCon(sensor, LOCATION_DESCRIPTION, SERVER_HOST, SERVER_PORT)
 		).start();
 		
-		// TODO
-		// Create RMI (maybe it needs to be done in its own thread, note how stream has been implemented)
+		// Create RMI
+		try {
+			rmi = new TClientRMI(SERVER_HOST, RMI_PORT, LOCATION_DESCRIPTION);
+		} catch (RemoteException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
 		
 		// Read input from human
 		// Create an input scanner
@@ -54,12 +68,13 @@ public class TClient {
 			// What we should do depending on input (use cases and NOT if-statements)
 			switch(option = scanner.nextInt()) {
 				case 1:
-					// TODO (important to implement)
-					// 1. Call getAverage on RMI object
-					// 2. Print the average
+					try {
+						System.out.println(rmi.getAverageTemperature());
+					} catch (RemoteException e) {
+						System.out.println(e.getMessage());
+						e.printStackTrace();
+					}
 					
-					// Test
-					System.out.println("Chose: " + option);
 					break;
 				case 2:
 					// TODO (optional...)

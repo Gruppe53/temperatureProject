@@ -5,9 +5,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.List;
 
-public class RTClient implements Runnable {
+public class RTClient extends UnicastRemoteObject implements Runnable, RTClientInterface {
+	private static final long serialVersionUID = 1L;
+	
 	private Socket client = null;
 	private String location;
 	private BufferedReader input;
@@ -38,7 +43,11 @@ public class RTClient implements Runnable {
 	 * @param location
 	 *            the location or description of the client
 	 */
-	public RTClient(Socket client, String location) {
+	public RTClient(Socket client, String location) throws RemoteException {
+		// Call super to UnicastRemoteObject
+		super();
+		
+		// Setup object
 		this.client = client;
 		this.location = location;
 		this.updates = 0;
@@ -126,5 +135,23 @@ public class RTClient implements Runnable {
 			sum += t.getTemperature();
 		
 		this.average = sum / this.tData.size();
+	}
+
+	@Override
+	public String getAverageTemperature() throws RemoteException {
+		return String.valueOf(this.average);
+	}
+
+	@Override
+	public List<TStoredData> getStoredData() throws RemoteException {
+		return this.tData;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public double getAverage() {
+		return average;
 	}
 }

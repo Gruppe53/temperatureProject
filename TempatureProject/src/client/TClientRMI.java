@@ -1,22 +1,27 @@
 package client;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import client.TClient;
+import java.util.List;
 
-public class TClientRMI {
-	public static void main (String args[]) {
-		if (System.getSecurityManager() == null) {
-			System.setSecurityManager(new SecurityManager());
-		}
-		
-		try {
-			String name = "Client";
-			Registry registry = LocateRegistry.getRegistry(args[0]);
-			TClient client = (TClient) registry.lookup(name);
-			System.out.println();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+import server.RTClientInterface;
+import server.TStoredData;
+
+public class TClientRMI implements RTClientInterface {
+	private RTClientInterface rtc;
+	
+	public TClientRMI(String host, int port, String robj) throws RemoteException, NotBoundException {
+		Registry reg = LocateRegistry.getRegistry(host, port);
+		this.rtc = (RTClientInterface) reg.lookup(robj);
+	}
+	
+	public String getAverageTemperature() throws RemoteException {
+		return rtc.getAverageTemperature();
+	}
+	
+	public List<TStoredData> getStoredData() throws RemoteException {
+		return rtc.getStoredData();
 	}
 }
