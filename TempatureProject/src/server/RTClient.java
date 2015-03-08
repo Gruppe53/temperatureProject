@@ -101,10 +101,10 @@ public class RTClient implements Runnable {
 
 					// If update hits 100 break while loop
 					if (this.updates == this.MAX_UPDATES) {
-						this.output.writeBytes("END");
+						this.output.writeBytes("END\r");
 						break;
 					} else
-						this.output.writeBytes(temperatureStr);
+						this.output.writeBytes(temperatureStr + "\r");
 
 					// If the client is closed break while loop
 					if (this.client.isClosed())
