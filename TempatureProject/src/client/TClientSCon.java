@@ -2,7 +2,10 @@ package client;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 public class TClientSCon {
@@ -14,8 +17,42 @@ public class TClientSCon {
 	// Default values
 	private final String SERVER_HOST			= "localhost";
 	private final int SERVER_PORT				= 17056; // Which port should we connect through
-	private final TimeUnit UPDATE_UNIT			= TimeUnit.MILLISECONDS; // What time unit should we use
-	private final int UPDATE_INTERVAL			= 5000; // With which interval should we update the temperature
-	private final int START_TIME				= 5000; // Delay the client from sending data to the server (cosmetic reasons only)
-	private final String LOCATION_DESCRIPTION	= "Test room 1"; // This should be determined by CLI
+
+
+
+public TClientSCon() {
+
+	try {
+		// Create client and I/O objects
+		client = new Socket(this.SERVER_HOST, this.SERVER_PORT);
+		output = new DataOutputStream(client.getOutputStream());
+		input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+
+		
+	} catch (UnknownHostException e) {
+		System.out.println(e.getMessage());
+		e.printStackTrace();
+	} catch (IOException e) {
+		System.out.println(e.getMessage());
+		e.printStackTrace();
+	} catch (Exception e) {
+		System.out.println(e.getMessage());
+		e.printStackTrace();
+	} finally {
+		try {
+			// Close resources
+			input.close();
+			output.close();
+			client.close();
+
+			System.out.println("Connection closed.");
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+}
 }
