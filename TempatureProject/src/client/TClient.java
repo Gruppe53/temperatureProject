@@ -100,8 +100,10 @@ public class TClient {
 			System.out.print("Choose option: ");
 		}
 		
+		// Prompt user that we're closing down
 		System.out.println("Exiting...");
 		
+		// Closing resources
 		scanner.close();
 	}
 
