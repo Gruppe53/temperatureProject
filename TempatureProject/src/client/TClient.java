@@ -60,9 +60,6 @@ public class TClient {
 					
 					// Test
 					System.out.println("Chose: " + option);
-					
-					// Prepare next line to be read
-					scanner.nextLine();
 					break;
 				case 2:
 					// TODO (optional...)
@@ -70,9 +67,6 @@ public class TClient {
 					
 					// Test
 					System.out.println("Chose: " + option);
-					
-					// For now, make sure next line is prepared
-					scanner.nextLine();
 					break;
 				case 3:
 					// Print options menu
@@ -86,9 +80,6 @@ public class TClient {
 					// If chosen input isn't acknowledged ask human to try again
 					System.out.println();
 					System.out.println("Wrong input, please try again.");
-					
-					// Prepare next line to be read
-					scanner.nextLine();
 					break;
 			}
 			
@@ -98,6 +89,9 @@ public class TClient {
 			
 			// Cosmetic...
 			System.out.print("Choose option: ");
+			
+			// Prepare next line to be read
+			scanner.nextLine();
 		}
 		
 		// Prompt user that we're closing down
