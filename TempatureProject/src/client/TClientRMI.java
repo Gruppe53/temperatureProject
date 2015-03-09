@@ -12,8 +12,11 @@ import server.TStoredData;
 public class TClientRMI implements RTClientInterface {
 	private RTClientInterface rtc;
 	
+	// RMI connection, robj is the location
 	public TClientRMI(String host, int port, String robj) throws RemoteException, NotBoundException {
+		// set up registry
 		Registry reg = LocateRegistry.getRegistry(host, port);
+		// instance of RTClientInterface
 		this.rtc = (RTClientInterface) reg.lookup(robj);
 	}
 	
