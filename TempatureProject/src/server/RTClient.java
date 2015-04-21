@@ -154,4 +154,16 @@ public class RTClient extends UnicastRemoteObject implements Runnable, RTClientI
 	public double getAverage() {
 		return average;
 	}
+
+	@Override
+	public boolean subscribeTClient(String description) throws RemoteException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean publishTemperature(double temperature) throws RemoteException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
