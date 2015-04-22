@@ -11,15 +11,7 @@ public interface RTClientInterface extends Remote {
 	 * @return current average temperature.
 	 * @throws RemoteException is thrown if a remote error occurs.
 	 */
-	public String getAverageTemperature() throws RemoteException;
-	
-	/**
-	 * Calls remote object and returns the current list with all recorded data.
-	 * 
-	 * @return current data list.
-	 * @throws RemoteException is thrown if a remote error occurs.
-	 */
-	public List<TStoredData> getStoredData() throws RemoteException;
+	public double getAverageTemperature(String description) throws RemoteException;
 	
 	/**
 	 * Allows a client to subscribe to the server's client list.
@@ -31,11 +23,11 @@ public interface RTClientInterface extends Remote {
 	public boolean subscribeTClient(String description) throws RemoteException;
 	
 	/**
-	 * * Allows a client to publish current temperature to server.
+	 * Allows a client to publish current temperature to server.
 	 * 
 	 * @param temperature Current temperature.
 	 * @return true if temperature was received and successfully saved.
 	 * @throws RemoteException is thrown if a remote error occurs.
 	 */
-	public boolean publishTemperature(double temperature) throws RemoteException;
+	public boolean publishTemperature(String description, double temperature) throws RemoteException;
 }
