@@ -1,19 +1,35 @@
 package server;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TStoredData {
 	private String description;
-	private double temperature;
+	private List<Double> temperature = new ArrayList<Double>();
 
-	public TStoredData(double temperature) {
-		this.temperature = temperature;
+	public TStoredData(String description) {
+		this.description = description;
+	}
+	
+	public boolean addTemperature(double temperature) {
+		return this.temperature.add(temperature);
+	}
+	
+	public double getTemperatureSum() {
+		double sum = 0;
+		
+		for(double t : temperature)
+			sum += t;
+			
+		return sum;
+	}
+	
+	public List<Double> getTemperature() {
+		return this.temperature;
 	}
 
-	public double getTemperature() {
-		return temperature;
-	}
-
-	public void setTemperature(double temperature) {
-		this.temperature = temperature;
+	public double getTemperature(int index) {
+		return this.temperature.get(index);
 	}
 
 	public String getDescription() {
