@@ -81,6 +81,7 @@ public class TClient {
 			// What we should do depending on input (use cases and NOT if-statements)
 			switch(option = scanner.nextInt()) {
 				case 1:
+					// Print current average
 					try {
 						System.out.println(rmi.getAverageTemperature(LOCATION_DESCRIPTION));
 					} catch (RemoteException e) {
@@ -90,11 +91,8 @@ public class TClient {
 					
 					break;
 				case 2:
-					// TODO (optional...)
-					// Stop the client
-					
-					// Test
-					System.out.println("Chose: " + option);
+					// Shut down executor
+					exe.shutdownNow();
 					break;
 				case 3:
 					// Print options menu
