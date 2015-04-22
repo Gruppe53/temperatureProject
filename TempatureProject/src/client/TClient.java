@@ -13,7 +13,7 @@ public class TClient {
 	private ScheduledExecutorService exe;
 
 	// Default values
-	private final String LOCATION_DESCRIPTION	= "Test room 1";	// This should be determined by CLI
+	private final String LOCATION_DESCRIPTION = "Test room 1";		// Sensor position (e.g. "living room", "kitchen"....)
 	private final String SERVER_HOST = "localhost";					// Server address
 	private final int RMI_PORT = 17056;								// Server port
 	
