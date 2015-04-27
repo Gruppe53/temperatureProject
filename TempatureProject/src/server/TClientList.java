@@ -25,7 +25,9 @@ public class TClientList extends UnicastRemoteObject implements RTClientInterfac
 			if(tData.get(i).getDescription().equals(description))	// Compare parameter description with client description
 				return calculateAverage(i);							// If equal return a calculated average of the client's temperature
 		
-		return -273; 												// If no match is found return -273 (this should be handled by the client as an error) 
+		return -273; 												// If no match is found return -273
+																	// - This should be handled by the client as an error,
+																	// as -273 isn't a feasible temperature (for Celsius, that is)
 	}
 	
 	@Override
